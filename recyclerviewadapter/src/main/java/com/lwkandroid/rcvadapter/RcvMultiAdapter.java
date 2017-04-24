@@ -16,7 +16,7 @@ import com.lwkandroid.rcvadapter.listener.RcvItemViewClickListener;
 import com.lwkandroid.rcvadapter.listener.RcvItemViewLongClickListener;
 import com.lwkandroid.rcvadapter.listener.RcvLoadMoreListener;
 import com.lwkandroid.rcvadapter.manager.RcvItemViewManager;
-import com.lwkandroid.rcvadapter.ui.RcvLoadMoreView;
+import com.lwkandroid.rcvadapter.ui.RcvDefLoadMoreView;
 import com.lwkandroid.rcvadapter.utils.RcvAlphaInAnim;
 
 import java.util.ArrayList;
@@ -182,7 +182,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
      */
     public void enableLoadMore()
     {
-        enableLoadMore(new RcvLoadMoreView(mContext));
+        enableLoadMore(new RcvDefLoadMoreView(mContext));
     }
 
     /**
@@ -635,6 +635,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         if (isLoadMoreEnable())
         {
             mLoadMoreLayout.handleLoadSuccess();
+            //延迟刷新UI,让用户看见加载结果
             mLoadMoreLayout.postDelayed(new Runnable()
             {
                 @Override

@@ -12,14 +12,14 @@ import com.lwkandroid.rcvadapter.base.RcvBaseLoadMoreView;
 /**
  * 滑倒底部自动加载更多默认实现View
  */
-public class RcvLoadMoreView extends RcvBaseLoadMoreView
+public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
 {
     private View mFlStatus;
     private ProgressBar mPgbLoading;
     private ImageView mImgStatus;
     private TextView mTvStatus;
 
-    public RcvLoadMoreView(Context context)
+    public RcvDefLoadMoreView(Context context)
     {
         super(context);
     }
