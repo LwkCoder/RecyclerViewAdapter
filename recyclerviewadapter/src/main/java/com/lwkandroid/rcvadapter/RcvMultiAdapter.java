@@ -79,19 +79,17 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     /**
      * 添加子布局类型
      */
-    public RcvMultiAdapter addItemView(RcvBaseItemView<T> itemView)
+    public void addItemView(RcvBaseItemView<T> itemView)
     {
         mItemViewManager.addItemView(itemView);
-        return this;
     }
 
     /**
      * 添加子布局类型
      */
-    public RcvMultiAdapter addItemView(int viewType, RcvBaseItemView<T> itemView)
+    public void addItemView(int viewType, RcvBaseItemView<T> itemView)
     {
         mItemViewManager.addItemView(viewType, itemView);
-        return this;
     }
 
     /**
@@ -288,17 +286,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
             //设置数据
             mItemViewManager.setData(holder, mDataList.get(position - getHeadCounts()), position);
             //设置动画
-            setItemShowingAnim(holder, position);
-        }
-    }
-
-    //设置子item展示动画
-    protected void setItemShowingAnim(RcvHolder holder, int position)
-    {
-        if (isItemShowingAnimEnable() && position > mAnimLastPosition)
-        {
-            mAnimLastPosition = position;
-            mAnimation.startAnim(holder.itemView);
+            startItemAnim(holder, position);
         }
     }
 
@@ -317,6 +305,16 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
             return mItemViewManager.getItemViewType(mDataList.get(position - getHeadCounts()), position - getHeadCounts());
         else
             return super.getItemViewType(position);
+    }
+
+    //启动子item展示动画
+    protected void startItemAnim(RcvHolder holder, int position)
+    {
+        if (isItemShowingAnimEnable() && position > mAnimLastPosition)
+        {
+            mAnimLastPosition = position;
+            mAnimation.startAnim(holder.itemView);
+        }
     }
 
     /**
