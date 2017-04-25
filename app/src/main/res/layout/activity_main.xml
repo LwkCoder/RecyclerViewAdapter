@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,9 +7,140 @@
     android:layout_height="match_parent"
     tools:context="com.lwksample.rcvadapter.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <!--LayoutManager-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/darker_gray"
+            android:text="LayoutManager"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"/>
+
+        <RadioGroup
+            android:id="@+id/rg_main_laymgr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/rb_main_01"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="LinearLayoutManager"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
+
+            <RadioButton
+                android:id="@+id/rb_main_02"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="GridLayoutManager"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
+
+            <RadioButton
+                android:id="@+id/rb_main_03"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="StaggeredGridLayoutManager"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
+
+        </RadioGroup>
+
+        <!--ViewType-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@android:color/darker_gray"
+            android:gravity="center_vertical"
+            android:text="ViewType"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"/>
+
+        <RadioGroup
+            android:id="@+id/rg_main_viewtype"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_main_04"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="Single"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
+
+            <RadioButton
+                android:id="@+id/rb_main_05"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Multi"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
+
+        </RadioGroup>
+
+        <!--其他参数-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@android:color/darker_gray"
+            android:gravity="center_vertical"
+            android:text="Other Configration"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"/>
+
+        <CheckBox
+            android:id="@+id/ck_main_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="需要HeaderView"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"/>
+
+        <CheckBox
+            android:id="@+id/ck_main_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="需要FooterView"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"/>
+
+        <CheckBox
+            android:id="@+id/ck_main_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="需要EmptyView"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"/>
+
+        <CheckBox
+            android:id="@+id/ck_main_loadMore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="需要LoadMore"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"/>
+
+        <Button
+            android:id="@+id/btn_main_go"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="GOGOGO"/>
+
+    </LinearLayout>
+
+</ScrollView>

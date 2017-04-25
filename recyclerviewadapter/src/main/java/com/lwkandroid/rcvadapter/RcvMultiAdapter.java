@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,9 +43,9 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     //子布局管理器
     protected RcvItemViewManager mItemViewManager;
     //存放头部布局的容器
-    protected SparseArray<View> mHeadViews;
+    protected SparseArray<View> mHeaderViews;
     //存放底部布局的容器
-    protected SparseArray<View> mFootViews;
+    protected SparseArray<View> mFooterViews;
     //底部加载更多的布局
     protected RcvBaseLoadMoreView mLoadMoreLayout;
     //行布局点击监听
@@ -98,81 +99,81 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
      * 添加HeadView
      * [注意！调用该方法前请确保RecyclerView已经调用了setLayoutManager()]
      */
-    public void addHeadView(View... headViews)
+    public void addHeaderView(View... headerViews)
     {
-        if (mHeadViews == null)
-            mHeadViews = new SparseArray<>();
-        for (View headView : headViews)
+        if (mHeaderViews == null)
+            mHeaderViews = new SparseArray<>();
+        for (View headerView : headerViews)
         {
-            mHeadViews.put(VIEW_TYPE_HEAD + getHeadCounts(), headView);
+            mHeaderViews.put(VIEW_TYPE_HEAD + getHeadCounts(), headerView);
         }
 
         notifyDataSetChanged();
     }
 
     /**
-     * 删除指定位置的HeadView
+     * 删除指定位置的HeaderView
      *
      * @param index 索引位置
      */
-    public void removeHeadViewAt(int index)
+    public void removeHeaderViewAt(int index)
     {
-        if (mHeadViews != null)
+        if (mHeaderViews != null)
         {
-            mHeadViews.removeAt(index);
+            mHeaderViews.removeAt(index);
             notifyDataSetChanged();
         }
     }
 
     /**
-     * 清空HeadView
+     * 清空HeaderView
      */
-    public void clearHeadViews()
+    public void clearHeaderViews()
     {
-        if (mHeadViews != null && mHeadViews.size() > 0)
+        if (mHeaderViews != null && mHeaderViews.size() > 0)
         {
-            mHeadViews.clear();
+            mHeaderViews.clear();
             notifyDataSetChanged();
         }
     }
 
     /**
-     * 添加FootView
+     * 添加FooterView
      * [注意！调用该方法前请确保RecyclerView已经调用了setLayoutManager()]
      */
-    public void addFootView(View... footViews)
+    public void addFooterView(View... footViews)
     {
-        if (mFootViews == null)
-            mFootViews = new SparseArray<>();
+        if (mFooterViews == null)
+            mFooterViews = new SparseArray<>();
         for (View footView : footViews)
         {
-            mFootViews.put(VIEW_TYPE_FOOT + getFootCounts(), footView);
+            mFooterViews.put(VIEW_TYPE_FOOT + getFootCounts(), footView);
         }
         notifyDataSetChanged();
     }
 
     /**
-     * 删除指定位置的FootView
+     * 删除指定位置的FooterView
      *
      * @param index 索引位置
      */
-    public void removeFootViewAt(int index)
+    public void removeFooterViewAt(int index)
     {
-        if (mFootViews != null)
+        if (mFooterViews != null)
         {
-            mFootViews.removeAt(index);
+            mFooterViews.removeAt(index);
             notifyDataSetChanged();
         }
     }
 
     /**
-     * 清空FootView
+     * 清空FooterView
      */
-    public void clearFootViews()
+    public void clearFooterViews()
     {
-        if (mFootViews != null && mFootViews.size() > 0)
+        if (mFooterViews != null && mFooterViews.size() > 0)
         {
-            mFootViews.clear();
+            mFooterViews.clear();
             notifyDataSetChanged();
         }
     }
@@ -277,12 +278,12 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         } else if (viewType == VIEW_TYPE_LOADMORE && isLoadMoreEnable())
         {
             return RcvHolder.get(mContext, mLoadMoreLayout);
-        } else if (viewType >= VIEW_TYPE_FOOT && mFootViews.get(viewType) != null)
+        } else if (viewType >= VIEW_TYPE_FOOT && mFooterViews.get(viewType) != null)
         {
-            return RcvHolder.get(mContext, mFootViews.get(viewType));
-        } else if (viewType >= VIEW_TYPE_HEAD && mHeadViews.get(viewType) != null)
+            return RcvHolder.get(mContext, mFooterViews.get(viewType));
+        } else if (viewType >= VIEW_TYPE_HEAD && mHeaderViews.get(viewType) != null)
         {
-            return RcvHolder.get(mContext, mHeadViews.get(viewType));
+            return RcvHolder.get(mContext, mHeaderViews.get(viewType));
         } else
         {
             int layoutId = mItemViewManager.getItemViewLayoutId(viewType);
@@ -305,7 +306,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         } else
         {
             //设置数据
-            mItemViewManager.setData(holder, mDataList.get(position - getHeadCounts()), position);
+            mItemViewManager.setData(holder, mDataList.get(position - getHeadCounts()), holder.getLayoutPosition());
             //设置动画
             startItemAnim(holder, position);
         }
@@ -316,23 +317,22 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     {
         if (isInHeadViewPos(position))
         {
-            return mHeadViews.keyAt(position);
+            return mHeaderViews.keyAt(position);
         } else if (isInEmptyStatus() && (mEmptyViewPosition == -1 || position == mEmptyViewPosition))
         {
             mEmptyViewPosition = position;
             return VIEW_TYPE_EMPTY;
         } else if (isInFootViewPos(position))
         {
-            return mFootViews.keyAt(position - getDataSize() - getHeadCounts() - getEmptyViewCounts());
+            return mFooterViews.keyAt(position - getDataSize() - getHeadCounts() - getEmptyViewCounts());
         } else if (isInLoadMorePos(position))
         {
             return VIEW_TYPE_LOADMORE;
         } else if (useItemViewManager())
         {
-            return mItemViewManager.getItemViewType(mDataList.get(position - getHeadCounts()), position - getHeadCounts());
-        }
-
-        return super.getItemViewType(position);
+            return mItemViewManager.getItemViewType(mDataList.get(position - getHeadCounts()), position);
+        } else
+            return super.getItemViewType(position);
     }
 
     //启动子item展示动画
@@ -367,7 +367,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
      */
     protected int getHeadCounts()
     {
-        return mHeadViews != null ? mHeadViews.size() : 0;
+        return mHeaderViews != null ? mHeaderViews.size() : 0;
     }
 
     /**
@@ -375,7 +375,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
      */
     protected int getFootCounts()
     {
-        return mFootViews != null ? mFootViews.size() : 0;
+        return mFooterViews != null ? mFooterViews.size() : 0;
     }
 
     /**
@@ -667,7 +667,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
                     //添加数据
                     if (newDataList != null && newDataList.size() > 0)
                     {
-                        int posStart = getHeadCounts() + getDataSize();
+                        int posStart = getHeadCounts() + getEmptyViewCounts() + getDataSize();
                         mDataList.addAll(newDataList);
                         notifyItemRangeInserted(posStart, newDataList.size());
                     }

@@ -122,7 +122,7 @@ public class RcvItemViewManager<T>
     public int getItemViewType(T item, int position)
     {
         int itemViewCounts = mAllItemViews.size();
-        for (int i = itemViewCounts - 1; i >= 0; i--)
+        for (int i = 0; i < itemViewCounts; i++)
         {
             RcvBaseItemView<T> itemView = mAllItemViews.valueAt(i);
             if (itemView.isForViewType(item, position))
@@ -164,7 +164,7 @@ public class RcvItemViewManager<T>
     public int getItemViewLayoutId(T item, int position)
     {
         int itemViewCounts = mAllItemViews.size();
-        for (int i = itemViewCounts - 1; i >= 0; i--)
+        for (int i = 0; i < itemViewCounts; i++)
         {
             RcvBaseItemView<T> itemView = mAllItemViews.valueAt(i);
             if (itemView.isForViewType(item, position))
