@@ -16,12 +16,6 @@ public class RcvLinearDecoration extends RecyclerView.ItemDecoration
 {
     private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
 
-    //垂直分割线样式标识
-    public static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
-
-    //水平分割线样式标识
-    public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
-
     //分割线drawable
     private Drawable mDivider;
 
@@ -35,7 +29,7 @@ public class RcvLinearDecoration extends RecyclerView.ItemDecoration
      * 默认分割线drawable，自定义风格
      *
      * @param context     上下文
-     * @param orientation HORIZONTAL_LIST或VERTICAL_LIST
+     * @param orientation LinearLayoutManager.VERTICAL或LinearLayoutManager.HORIZONTAL
      */
     public RcvLinearDecoration(Context context, int orientation)
     {
@@ -63,8 +57,8 @@ public class RcvLinearDecoration extends RecyclerView.ItemDecoration
     //设置风格
     public void setOrientation(int orientation)
     {
-        if (orientation != HORIZONTAL_LIST && orientation != VERTICAL_LIST)
-            throw new IllegalArgumentException("RcvLinearDecoration orientation must be HORIZONTAL_LIST or VERTICAL_LIST !!!");
+        if (orientation != LinearLayoutManager.VERTICAL && orientation != LinearLayoutManager.HORIZONTAL)
+            throw new IllegalArgumentException("RcvLinearDecoration orientation must be LinearLayoutManager.VERTICAL or LinearLayoutManager.HORIZONTAL !!!");
         mOrientation = orientation;
         mDividerHeight = mDivider.getIntrinsicHeight();
     }
@@ -72,7 +66,7 @@ public class RcvLinearDecoration extends RecyclerView.ItemDecoration
     @Override
     public void onDraw(Canvas c, RecyclerView parent)
     {
-        if (mOrientation == VERTICAL_LIST)
+        if (mOrientation == LinearLayoutManager.VERTICAL)
             drawVertical(c, parent);
         else
             drawHorizontal(c, parent);
@@ -118,7 +112,7 @@ public class RcvLinearDecoration extends RecyclerView.ItemDecoration
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state)
     {
         super.getItemOffsets(outRect, view, parent, state);
-        if (mOrientation == VERTICAL_LIST)
+        if (mOrientation == LinearLayoutManager.VERTICAL)
             outRect.set(0, 0, 0, mDividerHeight);
         else
             outRect.set(0, 0, mDividerHeight, 0);

@@ -59,6 +59,8 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     protected RcvBaseAnimation mAnimation;
     //上次子item展示动画最后的位置
     protected int mAnimLastPosition = -1;
+    //EmptyView的位置
+    protected int mEmptyViewPosition = -1;
 
     public RcvMultiAdapter(Context context, List<T> datas)
     {
@@ -177,20 +179,32 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
 
     /**
      * 是否开启加载更多功能【使用默认布局】
+     *
+     * @param enable   是否开启该功能
+     * @param listener 加载更多监听
      */
-    public void enableLoadMore()
+    public void enableLoadMore(boolean enable, RcvLoadMoreListener listener)
     {
-        enableLoadMore(new RcvDefLoadMoreView(mContext));
+        enableLoadMore(enable, new RcvDefLoadMoreView(mContext), listener);
     }
 
     /**
      * 是否开启加载更多功能
      *
-     * @param layout 自定义加载更多布局
+     * @param enable   是否开启该功能
+     * @param layout   自定义加载更多布局
+     * @param listener 加载更多监听
      */
-    public void enableLoadMore(RcvBaseLoadMoreView layout)
+    public void enableLoadMore(boolean enable, RcvBaseLoadMoreView layout, RcvLoadMoreListener listener)
     {
-        this.mLoadMoreLayout = layout;
+        if (enable)
+        {
+            this.mLoadMoreLayout = layout;
+            mLoadMoreLayout.setOnLoadMoreListener(listener);
+        } else
+        {
+            this.mLoadMoreLayout = null;
+        }
         notifyDataSetChanged();
     }
 
@@ -218,50 +232,57 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         this.mEmptyViewId = layoutId;
     }
 
-    //子item展示动画是否开启
-    protected boolean isItemShowingAnimEnable()
-    {
-        return mAnimation != null ? true : false;
-    }
-
     /**
      * 开启子item展示动画
      * [默认为AlphaIn动画]
+     *
+     * @param enable 是否开启该功能
      */
-    public void enableItemShowingAnim()
+    public void enableItemShowingAnim(boolean enable)
     {
-        enableItemShowingAnim(new RcvAlphaInAnim());
+        enableItemShowingAnim(enable, new RcvAlphaInAnim());
     }
 
     /**
      * 开启子item展示动画
      * [注意！当有HeadView或LoadMore的情况时，自定义动画可能会有问题!!!]
      *
+     * @param enable    是否开启该功能
      * @param animation 自定义动画
      */
-    public void enableItemShowingAnim(RcvBaseAnimation animation)
+    public void enableItemShowingAnim(boolean enable, RcvBaseAnimation animation)
     {
-        this.mAnimation = animation;
+        if (enable)
+            this.mAnimation = animation;
+        else
+            this.mAnimation = null;
+    }
+
+    //子item展示动画是否开启
+    protected boolean isItemShowingAnimEnable()
+    {
+        return mAnimation != null ? true : false;
     }
 
     @Override
     public RcvHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        if (mHeadViews != null && mHeadViews.get(viewType) != null)
-        {
-            return RcvHolder.get(mContext, mHeadViews.get(viewType));
-        } else if (mFootViews != null && mFootViews.get(viewType) != null)
-        {
-            return RcvHolder.get(mContext, mFootViews.get(viewType));
-        } else if (viewType == VIEW_TYPE_LOADMORE && isLoadMoreEnable())
-        {
-            return RcvHolder.get(mContext, (View) mLoadMoreLayout);
-        } else if (viewType == VIEW_TYPE_EMPTY)
+        //ViewType大小数序：VIEW_TYPE_EMPTY > VIEW_TYPE_LOADMORE > VIEW_TYPE_FOOT > VIEW_TYPE_HEAD
+        if (viewType == VIEW_TYPE_EMPTY)
         {
             if (mEmptyView != null)
                 return RcvHolder.get(mContext, mEmptyView);
             else
                 return RcvHolder.get(mContext, parent, mEmptyViewId);
+        } else if (viewType == VIEW_TYPE_LOADMORE && isLoadMoreEnable())
+        {
+            return RcvHolder.get(mContext, mLoadMoreLayout);
+        } else if (viewType >= VIEW_TYPE_FOOT && mFootViews.get(viewType) != null)
+        {
+            return RcvHolder.get(mContext, mFootViews.get(viewType));
+        } else if (viewType >= VIEW_TYPE_HEAD && mHeadViews.get(viewType) != null)
+        {
+            return RcvHolder.get(mContext, mHeadViews.get(viewType));
         } else
         {
             int layoutId = mItemViewManager.getItemViewLayoutId(viewType);
@@ -294,17 +315,24 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     public int getItemViewType(int position)
     {
         if (isInHeadViewPos(position))
+        {
             return mHeadViews.keyAt(position);
-        else if (isInFootViewPos(position))
-            return mFootViews.keyAt(position - getDataSize() - getHeadCounts());
-        else if (isInLoadMorePos(position))
-            return VIEW_TYPE_LOADMORE;
-        else if (isInEmptyStatus())
+        } else if (isInEmptyStatus() && (mEmptyViewPosition == -1 || position == mEmptyViewPosition))
+        {
+            mEmptyViewPosition = position;
             return VIEW_TYPE_EMPTY;
-        else if (useItemViewManager())
+        } else if (isInFootViewPos(position))
+        {
+            return mFootViews.keyAt(position - getDataSize() - getHeadCounts() - getEmptyViewCounts());
+        } else if (isInLoadMorePos(position))
+        {
+            return VIEW_TYPE_LOADMORE;
+        } else if (useItemViewManager())
+        {
             return mItemViewManager.getItemViewType(mDataList.get(position - getHeadCounts()), position - getHeadCounts());
-        else
-            return super.getItemViewType(position);
+        }
+
+        return super.getItemViewType(position);
     }
 
     //启动子item展示动画
@@ -323,7 +351,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
      */
     protected boolean useItemViewManager()
     {
-        return mItemViewManager.getItemViewCount() > 0;
+        return mItemViewManager.getItemViewCount() > 0 && getDataSize() > 0;
     }
 
     /**
@@ -359,6 +387,14 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     }
 
     /**
+     * 获取空占位View数量
+     */
+    protected int getEmptyViewCounts()
+    {
+        return isInEmptyStatus() ? 1 : 0;
+    }
+
+    /**
      * 某个位置是否处于HeadView的位置内
      */
     protected boolean isInHeadViewPos(int p)
@@ -371,8 +407,8 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
      */
     protected boolean isInFootViewPos(int p)
     {
-        return p >= getDataSize() + getHeadCounts() &&
-                p < getDataSize() + getHeadCounts() + getFootCounts();
+        return p >= getDataSize() + getHeadCounts() + getEmptyViewCounts() &&
+                p < getDataSize() + getHeadCounts() + getEmptyViewCounts() + getFootCounts();
     }
 
     /**
@@ -381,7 +417,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     protected boolean isInLoadMorePos(int p)
     {
         return isLoadMoreEnable() &&
-                p == getDataSize() + getHeadCounts() + getFootCounts();
+                p == getDataSize() + getHeadCounts() + getEmptyViewCounts() + getFootCounts();
     }
 
     /**
@@ -389,8 +425,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
      */
     protected boolean isInEmptyStatus()
     {
-        return (mEmptyView != null || mEmptyViewId != 0) &&
-                (getDataSize() + getHeadCounts() + getFootCounts() + getLoadMoreCounts()) == 0;
+        return (mEmptyView != null || mEmptyViewId != 0) && getDataSize() == 0;
     }
 
     /**
@@ -431,13 +466,12 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     @Override
     public int getItemCount()
     {
-        if (isInEmptyStatus())
-            return 1;
-        else
-            return getDataSize()
-                    + getHeadCounts()
-                    + getFootCounts()
-                    + getLoadMoreCounts();
+        //这里获取的是适配器中子元素的数量，不是数据的数量
+        return getDataSize()
+                + getEmptyViewCounts()
+                + getHeadCounts()
+                + getFootCounts()
+                + getLoadMoreCounts();
     }
 
     /**
@@ -498,6 +532,8 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     public void refreshDatas(List<T> data)
     {
         mDataList.clear();
+        mAnimLastPosition = -1;
+
         if (data != null && data.size() > 0)
             mDataList.addAll(data);
         notifyDataSetChanged();
@@ -609,17 +645,6 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     public void setOnItemLongClickListener(RcvItemViewLongClickListener<T> l)
     {
         this.mOnItemLongClickListener = l;
-    }
-
-    /**
-     * 设置加载更多的监听
-     */
-    public void setOnLoadMoreListener(RcvLoadMoreListener l)
-    {
-        if (isLoadMoreEnable())
-            mLoadMoreLayout.setOnLoadMoreListener(l);
-        else
-            throw new IllegalArgumentException("RcvMultiAdapter: Must enableLoadMore()");
     }
 
     /**

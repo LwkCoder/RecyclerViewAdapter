@@ -150,7 +150,8 @@ public class RcvItemViewManager<T>
      */
     public int getItemViewLayoutId(int viewType)
     {
-        return mAllItemViews.get(viewType).getItemViewLayoutId();
+        RcvBaseItemView<T> itemView = mAllItemViews.get(viewType);
+        return itemView != null ? itemView.getItemViewLayoutId() : -1;
     }
 
     /**
