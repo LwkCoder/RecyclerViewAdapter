@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity
     private CheckBox mCkFooter;
     private CheckBox mCkEmpty;
     private CheckBox mCkLoadMore;
+    private CheckBox mCkAnim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity
         mCkFooter = (CheckBox) findViewById(R.id.ck_main_footer);
         mCkEmpty = (CheckBox) findViewById(R.id.ck_main_empty);
         mCkLoadMore = (CheckBox) findViewById(R.id.ck_main_loadMore);
+        mCkAnim = (CheckBox) findViewById(R.id.ck_main_anim);
 
         findViewById(R.id.btn_main_go).setOnClickListener(new View.OnClickListener()
         {
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra(ParamsFlag.INTENT_LAYOUT_FOOT, mCkFooter.isChecked());
         intent.putExtra(ParamsFlag.INTENT_LAYOUT_EMPTY, mCkEmpty.isChecked());
         intent.putExtra(ParamsFlag.INTENT_LAYOUT_LOADMORE, mCkLoadMore.isChecked());
+        intent.putExtra(ParamsFlag.INTENT_LAYOUT_ANIM, mCkAnim.isChecked());
         startActivity(intent);
     }
 }

@@ -43,7 +43,7 @@ public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
     public void setBeforeLoadingUI()
     {
         mFlStatus.setVisibility(GONE);
-        mTvStatus.setText(R.string.rcv_loadmore_init);
+        mTvStatus.setText(null);
     }
 
     @Override

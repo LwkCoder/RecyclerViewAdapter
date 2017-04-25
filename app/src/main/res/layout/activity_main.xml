@@ -134,6 +134,14 @@
             android:textColor="@android:color/black"
             android:textSize="16sp"/>
 
+        <CheckBox
+            android:id="@+id/ck_main_anim"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="需要Animation(每条item的展示动画)"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"/>
+
         <Button
             android:id="@+id/btn_main_go"
             android:layout_width="match_parent"

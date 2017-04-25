@@ -24,5 +24,6 @@ public class ParamsFlag
     public static final String INTENT_LAYOUT_FOOT = "footer";
     public static final String INTENT_LAYOUT_EMPTY = "empty";
     public static final String INTENT_LAYOUT_LOADMORE = "loadMore";
+    public static final String INTENT_LAYOUT_ANIM = "anim";
 
 }

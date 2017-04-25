@@ -58,6 +58,7 @@ public abstract class RcvBaseLoadMoreView extends RelativeLayout
             throw new IllegalArgumentException("RcvLoadMoreBaseView: Must set content layout!");
         mLayoutContent = inflate(context, layoutId, this);
         initUI();
+        changeStatus(STATUS_INIT);
     }
 
     /**

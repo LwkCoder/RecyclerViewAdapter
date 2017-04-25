@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.lwkandroid.rcvadapter.RcvMultiAdapter;
 import com.lwkandroid.rcvadapter.holder.RcvHolder;
 import com.lwkandroid.rcvadapter.listener.RcvItemViewClickListener;
+import com.lwkandroid.rcvadapter.listener.RcvItemViewLongClickListener;
 import com.lwkandroid.rcvadapter.listener.RcvLoadMoreListener;
 import com.lwkandroid.rcvadapter.utils.RcvGridDecoration;
 import com.lwkandroid.rcvadapter.utils.RcvLinearDecoration;
@@ -47,9 +48,11 @@ public class DetailActivity extends AppCompatActivity
         boolean footer = intent.getBooleanExtra(ParamsFlag.INTENT_LAYOUT_FOOT, false);
         boolean empty = intent.getBooleanExtra(ParamsFlag.INTENT_LAYOUT_EMPTY, false);
         boolean loadMore = intent.getBooleanExtra(ParamsFlag.INTENT_LAYOUT_LOADMORE, false);
+        boolean anim = intent.getBooleanExtra(ParamsFlag.INTENT_LAYOUT_ANIM, false);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rcv_detail);
 
+        //选择LayoutManager
         switch (layMgrFlag)
         {
             case ParamsFlag.LAYOUT_MANAGER_LINEAR:
@@ -66,6 +69,7 @@ public class DetailActivity extends AppCompatActivity
                 break;
         }
 
+        //选择不同ViewType的适配器
         if (viewTypeFlag == ParamsFlag.VIEW_TYPE_SINGLE)
         {
             mAdapter = new TestSingleAdapter(this, mDatas);
@@ -74,20 +78,18 @@ public class DetailActivity extends AppCompatActivity
             mAdapter = new TestMultiAdapter(this, mDatas);
         }
 
-        //添加HeaderView、FooterView之前要先设置RecyclerView的LayoutManager!!!!
-
+        //添加HeaderView、FooterView、LoadMore
+        //要先设置RecyclerView的LayoutManager!!!!
         if (header)
         {
             View headerView = getLayoutInflater().inflate(R.layout.layout_headview, (ViewGroup) findViewById(android.R.id.content), false);
             mAdapter.addHeaderView(headerView);
         }
-
         if (footer)
         {
             View footerView = getLayoutInflater().inflate(R.layout.layout_footview, (ViewGroup) findViewById(android.R.id.content), false);
             mAdapter.addFooterView(footerView);
         }
-
         if (loadMore)
         {
             mAdapter.enableLoadMore(true, new RcvLoadMoreListener()
@@ -99,6 +101,8 @@ public class DetailActivity extends AppCompatActivity
                 }
             });
         }
+        //设置item显示动画
+        mAdapter.enableItemShowingAnim(anim);
 
         //如果需要展示空数据占位View，就先不给模拟数据
         if (empty)
@@ -114,12 +118,21 @@ public class DetailActivity extends AppCompatActivity
             mAdapter.refreshDatas(mDatas);
         }
 
+        //item的点击事件
         mAdapter.setOnItemClickListener(new RcvItemViewClickListener<TestData>()
         {
             @Override
             public void onItemViewClicked(int viewType, View view, RcvHolder holder, TestData testData, int position)
             {
                 Toast.makeText(DetailActivity.this, "Click position=" + position + " data=" + testData, Toast.LENGTH_SHORT).show();
+            }
+        });
+        mAdapter.setOnItemLongClickListener(new RcvItemViewLongClickListener<TestData>()
+        {
+            @Override
+            public void onItemViewLongClicked(int viewType, View view, RcvHolder holder, TestData testData, int position)
+            {
+                Toast.makeText(DetailActivity.this, "LongClick position=" + position + " data=" + testData, Toast.LENGTH_SHORT).show();
             }
         });
 
