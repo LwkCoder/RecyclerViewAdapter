@@ -18,7 +18,7 @@ public class LeftItemView extends RcvBaseItemView<TestData>
     }
 
     @Override
-    public void setData(RcvHolder holder, TestData testData, int position)
+    public void onBindView(RcvHolder holder, TestData testData, int position)
     {
         holder.setTvText(R.id.tv_left, testData.getContent());
     }

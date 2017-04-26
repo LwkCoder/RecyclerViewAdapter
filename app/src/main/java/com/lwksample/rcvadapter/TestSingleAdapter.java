@@ -20,7 +20,7 @@ public class TestSingleAdapter extends RcvSingleAdapter<TestData>
     }
 
     @Override
-    public void setData(RcvHolder holder, TestData itemData, int position)
+    public void onBindView(RcvHolder holder, TestData itemData, int position)
     {
         holder.setTvText(android.R.id.text1, itemData.getContent());
     }

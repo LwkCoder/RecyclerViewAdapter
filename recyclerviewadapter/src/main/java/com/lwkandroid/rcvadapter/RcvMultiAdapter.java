@@ -259,7 +259,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     }
 
     //子item展示动画是否开启
-    protected boolean isItemShowingAnimEnable()
+    protected boolean isItemAnimEnable()
     {
         return mAnimation != null ? true : false;
     }
@@ -305,7 +305,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         } else
         {
             //设置数据
-            mItemViewManager.setData(holder, mDataList.get(position - getHeadCounts()), holder.getLayoutPosition());
+            mItemViewManager.bindView(holder, mDataList.get(position - getHeadCounts()), holder.getLayoutPosition());
             //设置动画
             startItemAnim(holder, position);
         }
@@ -337,7 +337,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     //启动子item展示动画
     protected void startItemAnim(RcvHolder holder, int position)
     {
-        if (isItemShowingAnimEnable() && position > mAnimLastPosition)
+        if (isItemAnimEnable() && position > mAnimLastPosition)
         {
             mAnimLastPosition = position;
             mAnimation.startAnim(holder.itemView);

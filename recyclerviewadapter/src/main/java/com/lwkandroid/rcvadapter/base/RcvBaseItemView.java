@@ -25,11 +25,11 @@ public abstract class RcvBaseItemView<T>
     public abstract boolean isForViewType(T item, int position);
 
     /**
-     * 设置数据的方法
+     * 绑定UI和数据的方法
      *
      * @param holder   通用ViewHolder
      * @param t        数据
      * @param position 位置
      */
-    public abstract void setData(RcvHolder holder, T t, int position);
+    public abstract void onBindView(RcvHolder holder, T t, int position);
 }

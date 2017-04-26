@@ -33,12 +33,12 @@ public abstract class RcvSingleAdapter<T> extends RcvMultiAdapter<T>
             }
 
             @Override
-            public void setData(RcvHolder holder, T t, int position)
+            public void onBindView(RcvHolder holder, T t, int position)
             {
-                RcvSingleAdapter.this.setData(holder, t, position);
+                RcvSingleAdapter.this.onBindView(holder, t, position);
             }
         });
     }
 
-    public abstract void setData(RcvHolder holder, T itemData, int position);
+    public abstract void onBindView(RcvHolder holder, T itemData, int position);
 }

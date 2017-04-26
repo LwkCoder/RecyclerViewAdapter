@@ -95,7 +95,7 @@ public class RcvItemViewManager<T>
      * @param item     子布局
      * @param position 子布局位置
      */
-    public void setData(RcvHolder holder, T item, int position)
+    public void bindView(RcvHolder holder, T item, int position)
     {
         int itemViewCounts = mAllItemViews.size();
         for (int i = 0; i < itemViewCounts; i++)
@@ -104,7 +104,7 @@ public class RcvItemViewManager<T>
 
             if (itemView.isForViewType(item, position))
             {
-                itemView.setData(holder, item, position);
+                itemView.onBindView(holder, item, position);
                 return;
             }
         }
