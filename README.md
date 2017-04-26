@@ -171,7 +171,19 @@ mAdapter.setOnItemLongClickListener(new RcvItemViewLongClickListener<TestData>()
         });
 ```
 <br />
-**上面6点就是大部分基础功能的使用方法了，想了解更多方法请看源码。**
+**7. 添加分割线，直接上代码：**
+```
+//适用于LinearLayoutManager
+mRecyclerView.addItemDecoration(new RcvLinearDecoration(context, LinearLayoutManager.VERTICAL));
+
+//适用于GridLayoutManager、StaggeredGridLayoutManager
+mRecyclerView.addItemDecoration(new RcvGridDecoration(context));
+```
+**注：**
+①是直接设置给RecyclerView的，不是设置给适配器的，不要看错哦
+②支持自定义drawable当分割线
+<br />
+**上面就是大部分基础功能的使用方法了，想了解更多方法请看源码。**
 <br />
 ###待实现功能
 
