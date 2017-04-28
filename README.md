@@ -6,7 +6,7 @@ CSDN：http://blog.csdn.net/lwk520136/article/details/70787798<br />
 <br />
 ###引用方式
 ```
-compile 'com.lwkandroid:recyclerviewadapter:1.0.0'
+compile 'com.lwkandroid:recyclerviewadapter:1.1.0'
 ```
 
 <br />
@@ -15,6 +15,7 @@ compile 'com.lwkandroid:recyclerviewadapter:1.0.0'
  - 支持添加HeaderView、FooterView、EmptyView
  - 支持滑到底部加载更多
  - 支持每条Item显示的动画
+ - 支持嵌套Section（1.1.0版本新增）
 
 <br />
 ###使用方式
@@ -154,7 +155,7 @@ mAdapter.enableItemShowingAnim(true, ? extends RcvBaseAnimation);
 mAdapter.setOnItemClickListener(new RcvItemViewClickListener<TestData>()
         {
             @Override
-            public void onItemViewClicked(int viewType, View view, RcvHolder holder, TestData testData, int position)
+            public void onItemViewClicked(RcvHolder holder, TestData testData, int position)
             {
                 //onClick回调
             }
@@ -164,7 +165,7 @@ mAdapter.setOnItemClickListener(new RcvItemViewClickListener<TestData>()
 mAdapter.setOnItemLongClickListener(new RcvItemViewLongClickListener<TestData>()
         {
             @Override
-            public void onItemViewLongClicked(int viewType, View view, RcvHolder holder, TestData testData, int position)
+            public void onItemViewLongClicked(RcvHolder holder, TestData testData, int position)
             {
                 //onLongClick回调
             }
@@ -185,9 +186,52 @@ mRecyclerView.addItemDecoration(new RcvGridDecoration(context));
 <br />
 **上面就是大部分基础功能的使用方法了，想了解更多方法请看源码。**
 <br />
-###待实现功能
+**8.嵌套Section，稍微复杂一点，配合代码讲解：**
+适配器继承自`RcvSectionAdapter`,指定两个泛型，第一个代表`Section`，第二个代表普通数据`Data`，但要注意的是，在将数据传入适配器前需要通过一个实体类`RcvSectionWrapper`将两种数据进行包装。
+```
+public class TestSectionAdapter extends RcvSectionAdapter<TestSection,TestData>
+{
+    //注意构造函数里传入的数据集合必须是RcvSectionWrapper
+    public TestSectionAdapter(Context context, List<RcvSectionWrapper<TestSection,TestData>> datas)
+    {
+        super(context, datas);
+    }
 
- - 实现嵌套Section
+    @Override
+    public int getSectionLayoutId()
+    {
+        //返回Section对应的布局Id
+        return R.layout.layout_section_label;
+    }
+
+    @Override
+    public void onBindSectionView(RcvHolder holder, TestSection section, int position)
+    {
+        //绑定Section数据和UI的地方
+        holder.setTvText(R.id.tv_section_label,section.getSection());
+    }
+
+    @Override
+    public int getDataLayoutId()
+    {
+        //返回Data对应的布局Id
+        return android.R.layout.simple_list_item_1;
+    }
+
+    @Override
+    public void onBindDataView(RcvHolder holder, TestData data, int position)
+    {
+        //绑定Data数据和UI的地方
+        holder.setTvText(android.R.id.text1, data.getContent());
+    }
+}
+```
+**注：**
+①传给适配器的数据集合内实体类必须经过RcvSectionWrapper包装。<br />
+②向外公布的方法（例如点击监听）的实体类泛型不能传错。<br />
+详细使用示例请查看Demo
+<br />
+###待实现功能
  - 实现类似StickyHead
 <br />
 ###开源参考

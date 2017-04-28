@@ -30,7 +30,7 @@ allprojects {
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
-version = "1.0.0"
+version = "1.1.0"
 def siteUrl = 'https://github.com/Vanish136/RecyclerViewAdapter'
 def gitUrl = 'https://github.com/Vanish136/RecyclerViewAdapter.git'
 def bintrayuser = properties.getProperty("user")
@@ -89,7 +89,7 @@ javadoc {
         author true
         version true
         links "http://docs.oracle.com/javase/7/docs/api"
-        title "RecyclerViewAdapter 1.0.0"
+        title "RecyclerViewAdapter 1.1.0"
     }
 }
 
