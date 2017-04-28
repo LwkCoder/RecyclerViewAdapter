@@ -184,8 +184,6 @@ mRecyclerView.addItemDecoration(new RcvGridDecoration(context));
 ①是直接设置给RecyclerView的，不是设置给适配器的，不要看错哦
 ②支持自定义drawable当分割线
 <br />
-**上面就是大部分基础功能的使用方法了，想了解更多方法请看源码。**
-<br />
 **8.嵌套Section，稍微复杂一点，配合代码讲解：**
 适配器继承自`RcvSectionAdapter`,指定两个泛型，第一个代表`Section`，第二个代表普通数据`Data`，但要注意的是，在将数据传入适配器前需要通过一个实体类`RcvSectionWrapper`将两种数据进行包装。
 ```
@@ -230,6 +228,8 @@ public class TestSectionAdapter extends RcvSectionAdapter<TestSection,TestData>
 ①传给适配器的数据集合内实体类必须经过RcvSectionWrapper包装。<br />
 ②向外公布的方法（例如点击监听）的实体类泛型不能传错。<br />
 详细使用示例请查看Demo
+<br />
+**上面就是大部分基础功能的使用方法了，想了解更多方法请看源码。**
 <br />
 ###待实现功能
  - 实现类似StickyHead
