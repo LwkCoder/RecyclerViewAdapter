@@ -57,8 +57,10 @@ public class MainActivity extends AppCompatActivity
         int id = mRgViewType.getCheckedRadioButtonId();
         if (id == R.id.rb_main_04)
             return ParamsFlag.VIEW_TYPE_SINGLE;
-        else
+        else if (id == R.id.rb_main_05)
             return ParamsFlag.VIEW_TYPE_MULTI;
+        else
+            return ParamsFlag.VIEW_TYPE_SECTION;
     }
 
     private void gogogo()

@@ -90,6 +90,15 @@
                 android:textColor="@android:color/black"
                 android:textSize="16sp"/>
 
+            <RadioButton
+                android:id="@+id/rb_main_06"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Section"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
+
         </RadioGroup>
 
         <!--其他参数-->

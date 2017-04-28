@@ -18,6 +18,8 @@ public class ParamsFlag
 
     public static final int VIEW_TYPE_MULTI = 5;
 
+    public static final int VIEW_TYPE_SECTION = 6;
+
     public static final String INTENT_LAYOUT_MANAGER = "layMgr";
     public static final String INTENT_LAYOUT_VIEW_TYPE = "ViewType";
     public static final String INTENT_LAYOUT_HEAD = "header";

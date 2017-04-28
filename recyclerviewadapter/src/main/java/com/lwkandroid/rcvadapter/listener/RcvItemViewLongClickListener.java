@@ -1,7 +1,5 @@
 package com.lwkandroid.rcvadapter.listener;
 
-import android.view.View;
-
 import com.lwkandroid.rcvadapter.holder.RcvHolder;
 
 /**
@@ -11,5 +9,5 @@ import com.lwkandroid.rcvadapter.holder.RcvHolder;
  */
 public interface RcvItemViewLongClickListener<T>
 {
-    void onItemViewLongClicked(int viewType, View view, RcvHolder holder, T t, int position);
+    void onItemViewLongClicked(RcvHolder holder, T t, int position);
 }

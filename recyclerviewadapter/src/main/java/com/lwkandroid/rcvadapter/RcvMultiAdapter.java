@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.lwkandroid.rcvadapter.base.RcvBaseAnimation;
 import com.lwkandroid.rcvadapter.base.RcvBaseItemView;
 import com.lwkandroid.rcvadapter.base.RcvBaseLoadMoreView;
+import com.lwkandroid.rcvadapter.eunm.RcvViewType;
 import com.lwkandroid.rcvadapter.holder.RcvHolder;
 import com.lwkandroid.rcvadapter.listener.RcvItemViewClickListener;
 import com.lwkandroid.rcvadapter.listener.RcvItemViewLongClickListener;
@@ -27,14 +28,6 @@ import java.util.List;
  */
 public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
 {
-    //HeadView的ViewType基础标识
-    protected static final int VIEW_TYPE_HEAD = 1000000;
-    //FootView的ViewType基础标识
-    protected static final int VIEW_TYPE_FOOT = 2000000;
-    //LoadMoreLayout的ViewType标识
-    protected static final int VIEW_TYPE_LOADMORE = Integer.MAX_VALUE - 2;
-    //EmptyView的ViewType标识
-    protected static final int VIEW_TYPE_EMPTY = Integer.MAX_VALUE - 1;
     //上下文
     protected Context mContext;
     //数据源
@@ -104,7 +97,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
             mHeaderViews = new SparseArray<>();
         for (View headerView : headerViews)
         {
-            mHeaderViews.put(VIEW_TYPE_HEAD + getHeadCounts(), headerView);
+            mHeaderViews.put(RcvViewType.HEADER + getHeadCounts(), headerView);
         }
 
         notifyDataSetChanged();
@@ -146,7 +139,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
             mFooterViews = new SparseArray<>();
         for (View footView : footViews)
         {
-            mFooterViews.put(VIEW_TYPE_FOOT + getFootCounts(), footView);
+            mFooterViews.put(RcvViewType.FOOTER + getFootCounts(), footView);
         }
         notifyDataSetChanged();
     }
@@ -268,26 +261,26 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     public RcvHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         //ViewType大小数序：VIEW_TYPE_EMPTY > VIEW_TYPE_LOADMORE > VIEW_TYPE_FOOT > VIEW_TYPE_HEAD
-        if (viewType == VIEW_TYPE_EMPTY)
+        if (viewType == RcvViewType.EMPTY)
         {
             if (mEmptyView != null)
                 return RcvHolder.get(mContext, mEmptyView);
             else
                 return RcvHolder.get(mContext, parent, mEmptyViewId);
-        } else if (viewType == VIEW_TYPE_LOADMORE && isLoadMoreEnable())
+        } else if (viewType == RcvViewType.LOAD_MORE && isLoadMoreEnable())
         {
             return RcvHolder.get(mContext, mLoadMoreLayout);
-        } else if (viewType >= VIEW_TYPE_FOOT && mFooterViews.get(viewType) != null)
+        } else if (viewType >= RcvViewType.FOOTER && mFooterViews != null && mFooterViews.get(viewType) != null)
         {
             return RcvHolder.get(mContext, mFooterViews.get(viewType));
-        } else if (viewType >= VIEW_TYPE_HEAD && mHeaderViews.get(viewType) != null)
+        } else if (viewType >= RcvViewType.HEADER && mHeaderViews != null && mHeaderViews.get(viewType) != null)
         {
             return RcvHolder.get(mContext, mHeaderViews.get(viewType));
         } else
         {
             int layoutId = mItemViewManager.getItemViewLayoutId(viewType);
             RcvHolder holder = RcvHolder.get(mContext, parent, layoutId);
-            setListener(parent, holder, viewType);
+            setListener(holder);
             return holder;
         }
     }
@@ -320,13 +313,13 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         } else if (isInEmptyStatus() && (mEmptyViewPosition == -1 || position == mEmptyViewPosition))
         {
             mEmptyViewPosition = position;
-            return VIEW_TYPE_EMPTY;
+            return RcvViewType.EMPTY;
         } else if (isInFootViewPos(position))
         {
             return mFooterViews.keyAt(position - getDataSize() - getHeadCounts() - getEmptyViewCounts());
         } else if (isInLoadMorePos(position))
         {
-            return VIEW_TYPE_LOADMORE;
+            return RcvViewType.LOAD_MORE;
         } else if (useItemViewManager())
         {
             return mItemViewManager.getItemViewType(mDataList.get(position - getHeadCounts()), position);
@@ -430,7 +423,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     /**
      * 设置行布局点击监听【单击和长按】
      */
-    protected void setListener(final ViewGroup parent, final RcvHolder viewHolder, final int viewType)
+    protected void setListener(final RcvHolder viewHolder)
     {
         viewHolder.getConvertView().setOnClickListener(new View.OnClickListener()
         {
@@ -440,7 +433,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
                 if (mOnItemClickListener != null)
                 {
                     int position = viewHolder.getLayoutPosition();
-                    mOnItemClickListener.onItemViewClicked(viewType, v, viewHolder,
+                    mOnItemClickListener.onItemViewClicked(viewHolder,
                             mDataList.get(position - getHeadCounts()), position);
                 }
             }
@@ -454,10 +447,10 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
                 if (mOnItemLongClickListener != null)
                 {
                     int position = viewHolder.getLayoutPosition();
-                    mOnItemLongClickListener.onItemViewLongClicked(viewType, v, viewHolder,
+                    mOnItemLongClickListener.onItemViewLongClicked(viewHolder,
                             mDataList.get(position - getHeadCounts()), position);
                 }
-                return false;
+                return true;
             }
         });
     }
