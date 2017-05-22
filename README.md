@@ -1,25 +1,27 @@
 # RecyclerViewAdapter
-<br />
-Github的README排版混乱，想了解该框架的可参考以下博客说明：<br />
+
+想了解该框架的可参考以下博客说明：<br />
 CSDN：http://blog.csdn.net/lwk520136/article/details/70787798<br />
 简书：http://www.jianshu.com/p/c86a39f4e811
-<br />
-###引用方式
+
+### 引用方式
+
 ```
 compile 'com.lwkandroid:recyclerviewadapter:1.1.0'
 ```
 
-<br />
-###基础功能
+### 基础功能
  - 快速实现适配器，支持多种ViewType模式
  - 支持添加HeaderView、FooterView、EmptyView
  - 支持滑到底部加载更多
  - 支持每条Item显示的动画
  - 支持嵌套Section（1.1.0版本新增）
 
-<br />
-###使用方式
-**1. 当Item样式一样时，只需继承`RcvSingleAdapter<T>`即可，示例**：
+
+### 使用方式
+
+**1. 当Item样式一样时，只需继承`RcvSingleAdapter<T>`即可，示例：**
+
 ```
 public class TestSingleAdapter extends RcvSingleAdapter<TestData>
 {
@@ -37,7 +39,9 @@ public class TestSingleAdapter extends RcvSingleAdapter<TestData>
 }
 ```
 <br/>
-**2. 当Item样式不一样时，即存在多种`ViewType`类型的Item，需要将每种`ViewType`的Item单独实现，再关联到`RcvMultiAdapter<T>`中，示例**：
+
+**2. 当Item样式不一样时，即存在多种`ViewType`类型的Item，需要将每种`ViewType`的Item单独实现，再关联到`RcvMultiAdapter<T>`中，示例：**
+
 ```
 //第一步：每种Item分别继承RcvBaseItemView<T>
 public class LeftItemView extends RcvBaseItemView<TestData>
@@ -77,7 +81,9 @@ public class TestMultiAdapter extends RcvMultiAdapter<TestData>
 }
 ```
 <br />
-**3.优雅的添加HeaderView、FooterView、EmptyView，只需要在RecyclerView设置LayoutManager后调用相关方法即可**：
+
+**3.优雅的添加HeaderView、FooterView、EmptyView，只需要在RecyclerView设置LayoutManager后调用相关方法即可：**
+
 ```
 //要先设置LayoutManager
 mRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
@@ -95,7 +101,9 @@ mAdapter.setEmptyView(emptyView);
 mAdapter.setEmptyView(layoutId);
 ```
 <br />
+
 **4.设置滑动到底部自动加载更多，先上示例代码吧：**
+
 ```
 //最简单的方式，使用默认的样式
 mAdapter.enableLoadMore(true, new RcvLoadMoreListener()
@@ -133,11 +141,14 @@ mAdapter.enableLoadMore(true, ? extends RcvBaseLoadMoreView,new RcvLoadMoreListe
     }
 });
 ```
-**注：**
-① 默认的样式实现是类`RcvDefLoadMoreView`
+
+**注：** <br />
+① 默认的样式实现是类`RcvDefLoadMoreView` <br />
 ② 如需自定义样式，只需继承`RcvBaseLoadMoreView`，只要重写各状态UI的实现，无须关心状态切换，可参考`RcvDefLoadMoreView`内的实现方式。
 <br />
+
 **5.设置Item显示动画，先直接上代码：**
+
 ```
 //使用默认的动画（Alpha动画）
 mAdapter.enableItemShowingAnim(true);
@@ -145,14 +156,17 @@ mAdapter.enableItemShowingAnim(true);
 //使用自定义动画
 mAdapter.enableItemShowingAnim(true, ? extends RcvBaseAnimation);
 ```
-**注：**
-①默认动画的实现是类`RcvAlphaInAnim`
+
+**注：** <br />
+①默认动画的实现是类`RcvAlphaInAnim` <br />
 ②自定义样式需要继承`RcvBaseAnimation`，可参考`RcvAlphaInAnim`内部实现。
 <br />
+
 **6.设置Item点击监听：**
+
 ```
-//设置OnItemClickListener
-mAdapter.setOnItemClickListener(new RcvItemViewClickListener<TestData>()
+    //设置OnItemClickListener
+    mAdapter.setOnItemClickListener(new RcvItemViewClickListener<TestData>()
         {
             @Override
             public void onItemViewClicked(RcvHolder holder, TestData testData, int position)
@@ -161,8 +175,8 @@ mAdapter.setOnItemClickListener(new RcvItemViewClickListener<TestData>()
             }
         });
 
-//设置OnItemLongClickListener
-mAdapter.setOnItemLongClickListener(new RcvItemViewLongClickListener<TestData>()
+    //设置OnItemLongClickListener
+    mAdapter.setOnItemLongClickListener(new RcvItemViewLongClickListener<TestData>()
         {
             @Override
             public void onItemViewLongClicked(RcvHolder holder, TestData testData, int position)
@@ -172,7 +186,9 @@ mAdapter.setOnItemLongClickListener(new RcvItemViewLongClickListener<TestData>()
         });
 ```
 <br />
+
 **7. 添加分割线，直接上代码：**
+
 ```
 //适用于LinearLayoutManager
 mRecyclerView.addItemDecoration(new RcvLinearDecoration(context, LinearLayoutManager.VERTICAL));
@@ -180,12 +196,16 @@ mRecyclerView.addItemDecoration(new RcvLinearDecoration(context, LinearLayoutMan
 //适用于GridLayoutManager、StaggeredGridLayoutManager
 mRecyclerView.addItemDecoration(new RcvGridDecoration(context));
 ```
-**注：**
-①是直接设置给RecyclerView的，不是设置给适配器的，不要看错哦
+
+**注：** <br />
+①是直接设置给RecyclerView的，不是设置给适配器的，不要看错哦<br />
 ②支持自定义drawable当分割线
 <br />
+
 **8.嵌套Section，稍微复杂一点，配合代码讲解：**
+
 适配器继承自`RcvSectionAdapter`,指定两个泛型，第一个代表`Section`，第二个代表普通数据`Data`，但要注意的是，在将数据传入适配器前需要通过一个实体类`RcvSectionWrapper`将两种数据进行包装。
+
 ```
 public class TestSectionAdapter extends RcvSectionAdapter<TestSection,TestData>
 {
@@ -224,16 +244,18 @@ public class TestSectionAdapter extends RcvSectionAdapter<TestSection,TestData>
     }
 }
 ```
-**注：**
+
+**注：**<br />
 ①传给适配器的数据集合内实体类必须经过RcvSectionWrapper包装。<br />
-②向外公布的方法（例如点击监听）的实体类泛型不能传错。<br />
-详细使用示例请查看Demo
+②向外公布的方法（例如点击监听）的实体类泛型不能传错。
 <br />
+
 **上面就是大部分基础功能的使用方法了，想了解更多方法请看源码。**
 <br />
-###待实现功能
+
+### 待实现功能
  - 实现类似StickyHead
-<br />
-###开源参考
+
+### 开源参考
 1. https://github.com/hongyangAndroid/baseAdapter
 2. https://github.com/CymChad/BaseRecyclerViewAdapterHelper
