@@ -28,7 +28,7 @@ public class DataModel
         List<RcvSectionWrapper<TestSection, TestData>> list = new ArrayList<>();
         for (int i = 0; i < num; i++)
         {
-            if (i % 3 == 0)
+            if (i != 0 && i % 3 == 0)
             {
                 TestSection section = new TestSection("Label" + i);
                 list.add(new RcvSectionWrapper<TestSection, TestData>(true, section, null));

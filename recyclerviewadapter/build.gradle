@@ -30,19 +30,20 @@ allprojects {
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
+def lib_name = "RecyclerViewAdapter"
 version = "1.1.0"
+group = "com.lwkandroid"
 def siteUrl = 'https://github.com/Vanish136/RecyclerViewAdapter'
 def gitUrl = 'https://github.com/Vanish136/RecyclerViewAdapter.git'
 def bintrayuser = properties.getProperty("user")
 def bintrayapikey = properties.getProperty("apikey")
-group = "com.lwkandroid"
 
 install {
     repositories.mavenInstaller {
         pom {
             project {
                 packaging 'aar'
-                name 'RecyclerViewAdapter for Android'
+                name lib_name
                 url siteUrl
                 licenses {
                     license {
@@ -89,7 +90,6 @@ javadoc {
         author true
         version true
         links "http://docs.oracle.com/javase/7/docs/api"
-        title "RecyclerViewAdapter 1.1.0"
     }
 }
 
@@ -104,7 +104,7 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = "maven"
-        name = "RecyclerViewAdapter"
+        name = lib_name
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]

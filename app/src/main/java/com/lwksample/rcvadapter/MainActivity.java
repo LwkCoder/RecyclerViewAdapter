@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.RadioGroup;
 
+import com.lwk.comactionbar.ComActionBar;
+
 public class MainActivity extends AppCompatActivity
 {
     private RadioGroup mRgLayMgr;
@@ -22,6 +24,16 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ComActionBar actionBar = (ComActionBar) findViewById(R.id.cab_main);
+        actionBar.setRightClickListener01(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                //TODO 跳转到StickyDemo
+            }
+        });
 
         mRgLayMgr = (RadioGroup) findViewById(R.id.rg_main_laymgr);
         mRgViewType = (RadioGroup) findViewById(R.id.rg_main_viewtype);

@@ -24,4 +24,5 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile "com.android.support:appcompat-v7:${LIB_ANDROID_SUPPORT_VERSION}"
     compile project(':recyclerviewadapter')
+    compile 'com.lwkandroid.widget:ComActionBar:1.0.2'
 }

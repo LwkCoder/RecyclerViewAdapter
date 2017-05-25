@@ -12,6 +12,14 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <com.lwk.comactionbar.ComActionBar
+            android:id="@+id/cab_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:is_left_as_back="true"
+            app:right_text01="StickyHeadDemo"
+            app:title_text="使用示例"/>
+
         <!--LayoutManager-->
         <TextView
             android:layout_width="match_parent"

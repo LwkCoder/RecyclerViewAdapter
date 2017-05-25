@@ -21,14 +21,17 @@ import java.util.List;
 
 public abstract class RcvSectionAdapter<S, D> extends RcvMultiAdapter<RcvSectionWrapper<S, D>>
 {
+    protected RcvSectionLabelItemView mSectionItemView;
+    protected RcvSectionDataItemView mDataItemView;
+
     public RcvSectionAdapter(Context context, List<RcvSectionWrapper<S, D>> datas)
     {
         super(context, datas);
-        addItemView(RcvViewType.SECTION_LABEL, new RcvSectionLabelItemView());
-        addItemView(new RcvSectionDataItemView());
+        addItemView(RcvViewType.SECTION_LABEL, mSectionItemView = new RcvSectionLabelItemView());
+        addItemView(mDataItemView = new RcvSectionDataItemView());
     }
 
-    private class RcvSectionLabelItemView extends RcvBaseItemView<RcvSectionWrapper<S, D>>
+    protected class RcvSectionLabelItemView extends RcvBaseItemView<RcvSectionWrapper<S, D>>
     {
         @Override
         public int getItemViewLayoutId()
@@ -49,7 +52,7 @@ public abstract class RcvSectionAdapter<S, D> extends RcvMultiAdapter<RcvSection
         }
     }
 
-    private class RcvSectionDataItemView extends RcvBaseItemView<RcvSectionWrapper<S, D>>
+    protected class RcvSectionDataItemView extends RcvBaseItemView<RcvSectionWrapper<S, D>>
     {
         @Override
         public int getItemViewLayoutId()
