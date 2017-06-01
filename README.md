@@ -23,7 +23,7 @@ compile 'com.lwkandroid:recyclerviewadapter:1.2.0'
 ![](https://github.com/Vanish136/RecyclerViewAdapter/raw/master/pictures/pic02.png) <br />
 ![](https://github.com/Vanish136/RecyclerViewAdapter/raw/master/pictures/pic03.png) <br />
 ![](https://github.com/Vanish136/RecyclerViewAdapter/raw/master/pictures/pic04.png) <br />
-![](https://github.com/Vanish136/RecyclerViewAdapter/raw/master/pictures/sticky.gif) <br />
+![](https://github.com/Vanish136/RecyclerViewAdapter/raw/master/pictures/pic05.gif) <br />
 
 ### 使用方式
 
