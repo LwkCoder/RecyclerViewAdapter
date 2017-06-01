@@ -37,7 +37,6 @@ public class RcvStickyLayout extends FrameLayout
     protected RcvSectionAdapter mAdapter;
     protected int mFirstStickyPosition = -1;
     protected int mCurrentIndicatePosition = -1;
-    protected View mNextStickyView;
     protected List<Integer> mStickyPositionList = new LinkedList<>();
     protected OnStickyLayoutClickedListener mLayoutClickedListener;
 
@@ -186,13 +185,17 @@ public class RcvStickyLayout extends FrameLayout
 
         setVisibility(VISIBLE);
 
-        if (mNextStickyView != null && mStickyHeight != -1)
+        //两个Section相顶效果
+        if (mAdapter.getItemViewType(firstCompleteVisiableP) == RcvViewType.SECTION_LABEL)
         {
-            int top = mNextStickyView.getTop();
+            int top = mLayoutManager.findViewByPosition(firstCompleteVisiableP).getTop();
             if (top >= 0 && top < mStickyHeight)
                 setY(top - mStickyHeight);
             else
                 setY(0);
+        } else
+        {
+            setY(0);
         }
 
         //更新悬浮布局
@@ -217,7 +220,6 @@ public class RcvStickyLayout extends FrameLayout
         RcvSectionWrapper wrapper = (RcvSectionWrapper) mAdapter.getDatas().get(position - mAdapter.getHeadCounts());
         mAdapter.onBindSectionView(mHolder, wrapper.getSection(), position);
         mCurrentIndicatePosition = position;
-        mNextStickyView = mLayoutManager.findViewByPosition(getNextStickyPosition(mCurrentIndicatePosition));
     }
 
     @Override
@@ -247,20 +249,6 @@ public class RcvStickyLayout extends FrameLayout
             mFirstStickyPosition = mStickyPositionList.get(0);
         else
             mFirstStickyPosition = -1;
-    }
-
-    //获取某个位置下一个Section的位置
-    private int getNextStickyPosition(int startP)
-    {
-        if (mStickyPositionList == null || mStickyPositionList.size() == 0)
-            return -1;
-
-        int resultP = -1;
-        int startIndex = mStickyPositionList.indexOf(startP);
-        if (startIndex != -1 && ++startIndex < mStickyPositionList.size())
-            resultP = mStickyPositionList.get(startIndex);
-
-        return resultP;
     }
 
     //获取某一个位置上一个Section的位置
