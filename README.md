@@ -7,7 +7,7 @@ CSDN：http://blog.csdn.net/lwk520136/article/details/70787798<br />
 ### 引用方式
 
 ```
-compile 'com.lwkandroid:recyclerviewadapter:1.1.0'
+compile 'com.lwkandroid:recyclerviewadapter:1.2.0'
 ```
 
 ### 基础功能
@@ -16,7 +16,14 @@ compile 'com.lwkandroid:recyclerviewadapter:1.1.0'
  - 支持滑到底部加载更多
  - 支持每条Item显示的动画
  - 支持嵌套Section（1.1.0版本新增）
+ - 支持悬浮标签StickyLayout（1.2.0版本新增）
 
+### 效果图
+![](https://github.com/Vanish136/RecyclerViewAdapter/raw/master/pictures/pic01.png) <br />
+![](https://github.com/Vanish136/RecyclerViewAdapter/raw/master/pictures/pic02.png) <br />
+![](https://github.com/Vanish136/RecyclerViewAdapter/raw/master/pictures/pic03.png) <br />
+![](https://github.com/Vanish136/RecyclerViewAdapter/raw/master/pictures/pic04.png) <br />
+![](https://github.com/Vanish136/RecyclerViewAdapter/raw/master/pictures/sticky.gif) <br />
 
 ### 使用方式
 
