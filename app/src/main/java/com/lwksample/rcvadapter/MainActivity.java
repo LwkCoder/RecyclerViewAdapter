@@ -8,6 +8,7 @@ import android.widget.CheckBox;
 import android.widget.RadioGroup;
 
 import com.lwk.comactionbar.ComActionBar;
+import com.lwksample.rcvadapter.sticky.StickyActivity;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 //TODO 跳转到StickyDemo
+                startActivity(new Intent(MainActivity.this, StickyActivity.class));
             }
         });
 

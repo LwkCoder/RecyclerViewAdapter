@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.lwksample.rcvadapter.sticky.StickyActivity">
+
+    <com.lwk.comactionbar.ComActionBar
+        android:id="@+id/cab_sticky"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:is_left_as_back="true"
+        app:right_text01="添加数据"
+        app:title_text="Sticky演示"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcv_sticky"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <com.lwkandroid.rcvadapter.ui.RcvStickyLayout
+            android:id="@+id/stickyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+
+</LinearLayout>

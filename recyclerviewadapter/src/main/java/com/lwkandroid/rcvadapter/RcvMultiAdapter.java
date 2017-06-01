@@ -349,7 +349,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     /**
      * 获取数据数量
      */
-    protected int getDataSize()
+    public int getDataSize()
     {
         return mDataList.size();
     }
@@ -357,7 +357,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     /**
      * 获取HeadView的数量
      */
-    protected int getHeadCounts()
+    public int getHeadCounts()
     {
         return mHeaderViews != null ? mHeaderViews.size() : 0;
     }
@@ -365,7 +365,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     /**
      * 获取FootView的数量
      */
-    protected int getFootCounts()
+    public int getFootCounts()
     {
         return mFooterViews != null ? mFooterViews.size() : 0;
     }
