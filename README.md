@@ -250,11 +250,41 @@ public class TestSectionAdapter extends RcvSectionAdapter<TestSection,TestData>
 ②向外公布的方法（例如点击监听）的实体类泛型不能传错。
 <br />
 
+**9.悬浮标签StickyLayout**
+
+适配器方面无需改动，直接使用``RcvSectionAdapter``即可，在RecyclerView同级布局下添加``RcvStickyLayout``，然后在代码中关联起来即可：
+
+```
+    // xml布局中添加RcvStickyLayout：
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcv_sticky"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <com.lwkandroid.rcvadapter.ui.RcvStickyLayout
+            android:id="@+id/stickyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+
+
+
+    //代码中关联RecyclerView
+    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rcv_sticky);
+    /...省略设置RecyclerView的LayoutMananger和Adapter.../
+    RcvStickyLayout stickyLayout = (RcvStickyLayout) findViewById(R.id.stickyLayout);
+    stickyLayout.attachToRecyclerView(recyclerView);
+```
+
 **上面就是大部分基础功能的使用方法了，想了解更多方法请看源码。**
 <br />
 
 ### 待实现功能
- - 实现类似StickyHead
+ - 暂时未想到
 
 ### 开源参考
 1. https://github.com/hongyangAndroid/baseAdapter

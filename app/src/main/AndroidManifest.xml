@@ -27,7 +27,7 @@
             android:windowSoftInputMode="adjustPan">
         </activity>
         <activity
-            android:name=".sticky.StickyActivity"
+            android:name=".StickyActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">

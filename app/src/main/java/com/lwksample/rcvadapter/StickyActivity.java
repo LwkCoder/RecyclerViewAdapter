@@ -1,4 +1,4 @@
-package com.lwksample.rcvadapter.sticky;
+package com.lwksample.rcvadapter;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,9 +9,6 @@ import android.widget.Toast;
 
 import com.lwk.comactionbar.ComActionBar;
 import com.lwkandroid.rcvadapter.ui.RcvStickyLayout;
-import com.lwksample.rcvadapter.DataModel;
-import com.lwksample.rcvadapter.R;
-import com.lwksample.rcvadapter.TestSectionAdapter;
 
 public class StickyActivity extends AppCompatActivity implements View.OnClickListener
 {
