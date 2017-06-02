@@ -7,7 +7,7 @@ CSDN：http://blog.csdn.net/lwk520136/article/details/70787798<br />
 ### 引用方式
 
 ```
-compile 'com.lwkandroid:recyclerviewadapter:1.2.0'
+compile 'com.lwkandroid:recyclerviewadapter:1.2.1'
 ```
 
 ### 基础功能
