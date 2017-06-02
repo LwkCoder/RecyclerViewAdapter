@@ -38,6 +38,7 @@ public class RcvStickyLayout extends FrameLayout
     protected int mFirstStickyPosition = -1;
     protected int mCurrentIndicatePosition = -1;
     protected List<Integer> mStickyPositionList = new LinkedList<>();
+    protected int mAdapterItemCount;
     protected OnStickyLayoutClickedListener mLayoutClickedListener;
 
     public RcvStickyLayout(@NonNull Context context)
@@ -80,14 +81,14 @@ public class RcvStickyLayout extends FrameLayout
             return;
         }
         this.mAdapter = (RcvSectionAdapter) recyclerView.getAdapter();
-        recordStickyPosition();
+        resetParams();
         mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver()
         {
             @Override
             public void onChanged()
             {
                 super.onChanged();
-                recordStickyPosition();
+                resetParams();
                 updateScrollState();
             }
 
@@ -95,7 +96,7 @@ public class RcvStickyLayout extends FrameLayout
             public void onItemRangeChanged(int positionStart, int itemCount)
             {
                 super.onItemRangeChanged(positionStart, itemCount);
-                recordStickyPosition();
+                resetParams();
                 updateScrollState();
             }
 
@@ -103,7 +104,7 @@ public class RcvStickyLayout extends FrameLayout
             public void onItemRangeChanged(int positionStart, int itemCount, Object payload)
             {
                 super.onItemRangeChanged(positionStart, itemCount, payload);
-                recordStickyPosition();
+                resetParams();
                 updateScrollState();
             }
 
@@ -111,7 +112,7 @@ public class RcvStickyLayout extends FrameLayout
             public void onItemRangeInserted(int positionStart, int itemCount)
             {
                 super.onItemRangeInserted(positionStart, itemCount);
-                recordStickyPosition();
+                resetParams();
                 updateScrollState();
             }
 
@@ -119,7 +120,7 @@ public class RcvStickyLayout extends FrameLayout
             public void onItemRangeRemoved(int positionStart, int itemCount)
             {
                 super.onItemRangeRemoved(positionStart, itemCount);
-                recordStickyPosition();
+                resetParams();
                 updateScrollState();
             }
 
@@ -127,7 +128,7 @@ public class RcvStickyLayout extends FrameLayout
             public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount)
             {
                 super.onItemRangeMoved(fromPosition, toPosition, itemCount);
-                recordStickyPosition();
+                resetParams();
                 updateScrollState();
             }
         });
@@ -161,7 +162,6 @@ public class RcvStickyLayout extends FrameLayout
     {
         int firstVisiableP = -1;
         int firstCompleteVisiableP = -1;
-        int itemCount = mAdapter.getItemCount();
         if (mLayoutManager instanceof LinearLayoutManager)
         {
             firstVisiableP = ((LinearLayoutManager) mLayoutManager).findFirstVisibleItemPosition();
@@ -176,7 +176,9 @@ public class RcvStickyLayout extends FrameLayout
             firstCompleteVisiableP = ((StaggeredGridLayoutManager) mLayoutManager).findFirstCompletelyVisibleItemPositions(null)[0];
         }
 
-        if (firstVisiableP == -1 || mFirstStickyPosition == -1 || firstVisiableP < mFirstStickyPosition)
+        //需要隐藏悬浮布局的时机
+        if (firstVisiableP == -1 || firstCompleteVisiableP == -1
+                || mFirstStickyPosition == -1 || firstCompleteVisiableP <= mFirstStickyPosition)
         {
             setVisibility(GONE);
             mCurrentIndicatePosition = -1;
@@ -199,7 +201,7 @@ public class RcvStickyLayout extends FrameLayout
         }
 
         //更新悬浮布局
-        if (firstVisiableP < itemCount && firstCompleteVisiableP < itemCount)
+        if (firstVisiableP < mAdapterItemCount && firstCompleteVisiableP < mAdapterItemCount)
         {
             if (firstVisiableP > mCurrentIndicatePosition
                     && mAdapter.getItemViewType(firstVisiableP) == RcvViewType.SECTION_LABEL)
@@ -230,12 +232,13 @@ public class RcvStickyLayout extends FrameLayout
             mStickyHeight = mHolder.getConvertView().getHeight();
     }
 
-    //筛选并记录所有Section的位置
-    private void recordStickyPosition()
+    //重置各参数
+    private void resetParams()
     {
         mCurrentIndicatePosition = -1;
-        mStickyPositionList.clear();
+        mAdapterItemCount = mAdapter.getItemCount();
 
+        mStickyPositionList.clear();
         if (mAdapter != null)
         {
             for (int i = 0, count = mAdapter.getDataSize(); i < count; i++)
