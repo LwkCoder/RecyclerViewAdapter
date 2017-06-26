@@ -290,6 +290,13 @@ public class TestSectionAdapter extends RcvSectionAdapter<TestSection,TestData>
 **上面就是大部分基础功能的使用方法了，想了解更多方法请看源码。**
 <br />
 
+### 混淆配置
+```
+-dontwarn com.lwkandroid.rcvadapter.**
+-keep class com.lwkandroid.rcvadapter.**{*;}
+```
+<br />
+
 ### 待实现功能
  - 暂时未想到
 

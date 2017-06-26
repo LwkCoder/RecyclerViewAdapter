@@ -88,7 +88,7 @@ public class RcvHolder extends RecyclerView.ViewHolder
     /**
      * 为TextView设置字符串
      */
-    public RcvHolder setTvText(int viewId, String text)
+    public RcvHolder setTvText(int viewId, CharSequence text)
     {
         TextView tv = findView(viewId);
         if (tv != null)
@@ -160,7 +160,7 @@ public class RcvHolder extends RecyclerView.ViewHolder
     /**
      * 设置button的文本
      */
-    public RcvHolder setBtnText(int viewId, String text)
+    public RcvHolder setBtnText(int viewId, CharSequence text)
     {
         Button button = findView(viewId);
         if (button != null)

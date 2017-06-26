@@ -281,8 +281,16 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
             int layoutId = mItemViewManager.getItemViewLayoutId(viewType);
             RcvHolder holder = RcvHolder.get(mContext, parent, layoutId);
             setListener(holder);
+            onCreateDataViewHolder(holder, parent, viewType);
             return holder;
         }
+    }
+
+    /**
+     * 子类可重写该方法在创建ViewHolder的时候添加一些公共操作
+     */
+    protected void onCreateDataViewHolder(RcvHolder holder, ViewGroup parent, int viewType)
+    {
     }
 
     @Override
