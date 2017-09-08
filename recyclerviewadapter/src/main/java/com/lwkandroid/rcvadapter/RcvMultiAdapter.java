@@ -64,6 +64,14 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     }
 
     /**
+     * 获取全局Context
+     */
+    public Context getContext()
+    {
+        return mContext;
+    }
+
+    /**
      * 获取当前所有数据
      */
     public List<T> getDatas()

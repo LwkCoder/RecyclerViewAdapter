@@ -7,7 +7,13 @@ CSDN：http://blog.csdn.net/lwk520136/article/details/70787798<br />
 ### 引用方式
 
 ```
-compile 'com.lwkandroid:recyclerviewadapter:1.2.2'
+//在自己项目里添加RecyclerView的引用
+compile 'com.android.support:recyclerview-v7:your-version'
+
+//添加该库的引用，并去除自带的RecyclerView引用，防止版本冲突
+compile("com.lwkandroid:recyclerviewadapter:1.2.3") {
+    exclude(group: 'com.google.android', module: 'recyclerview-v7')
+}
 ```
 
 ### 基础功能
