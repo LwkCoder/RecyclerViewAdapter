@@ -12,7 +12,7 @@ compile 'com.android.support:recyclerview-v7:your-version'
 
 //添加该库的引用，并去除自带的RecyclerView引用，防止版本冲突
 compile("com.lwkandroid:recyclerviewadapter:1.2.3") {
-    exclude(group: 'com.google.android', module: 'recyclerview-v7')
+    exclude(group: 'com.android.support', module: 'recyclerview-v7')
 }
 ```
 
