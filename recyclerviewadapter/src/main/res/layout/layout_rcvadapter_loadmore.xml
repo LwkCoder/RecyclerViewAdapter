@@ -11,7 +11,7 @@
         android:id="@+id/fl_rcv_loadmore_status"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_marginRight="10dp">
+        android:layout_marginRight="8dp">
 
         <ProgressBar
             android:id="@+id/pgb_rcv_loadmore_loading"
@@ -22,14 +22,15 @@
         <ImageView
             android:id="@+id/img_rcv_loadmore_status"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:padding="3dp"/>
     </FrameLayout>
 
     <TextView
         android:id="@+id/tv_rcv_loadmore_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="8dp"
         android:textColor="#232B35"
         android:textSize="16sp"/>
 

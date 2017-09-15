@@ -568,6 +568,8 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     {
         if (t != null)
         {
+            if (isInEmptyStatus())
+                notifyItemRemoved(mEmptyViewPosition);
             mDataList.add(position - getHeadCounts(), t);
             notifyItemInserted(position);
             return position;
@@ -584,6 +586,8 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     {
         if (data != null && data.size() > 0)
         {
+            if (isInEmptyStatus())
+                notifyItemRemoved(mEmptyViewPosition);
             int posStart = getHeadCounts() + getDataSize();
             mDataList.addAll(data);
             notifyItemRangeInserted(posStart, data.size());
