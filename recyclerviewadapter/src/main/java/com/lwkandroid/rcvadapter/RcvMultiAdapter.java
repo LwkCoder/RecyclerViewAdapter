@@ -680,7 +680,10 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     {
         if (isLoadMoreEnable())
         {
-            mLoadMoreLayout.handleLoadSuccess();
+            synchronized (mLoadMoreLayout)
+            {
+                mLoadMoreLayout.handleLoadSuccess();
+            }
             //延迟刷新UI,让用户看见加载结果
             mLoadMoreLayout.postDelayed(new Runnable()
             {
@@ -695,14 +698,19 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
                         notifyItemRangeInserted(posStart, newDataList.size());
                     }
                     //刷新UI
-                    if (hasMoreData)
-                        mLoadMoreLayout.handleLoadInit();
-                    else
-                        mLoadMoreLayout.handleNoMoreData();
+                    //因为延迟加载，有可能导致LoadMoreView已经为空，需要判断
+                    if (mLoadMoreLayout != null)
+                    {
+                        if (hasMoreData)
+                            mLoadMoreLayout.handleLoadInit();
+                        else
+                            mLoadMoreLayout.handleNoMoreData();
+                    }
                 }
             }, 500);
-        } else
-            throw new IllegalArgumentException("RcvMultiAdapter: Must enableLoadMore()");
+        }
+        //        else
+        //            throw new IllegalArgumentException("RcvMultiAdapter: Must enableLoadMore()");
     }
 
     /**
@@ -711,9 +719,14 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     public void notifyLoadMoreFail()
     {
         if (isLoadMoreEnable())
-            mLoadMoreLayout.handleLoadFail();
-        else
-            throw new IllegalArgumentException("RcvMultiAdapter: Must enableLoadMore()");
+        {
+            synchronized (mLoadMoreLayout)
+            {
+                mLoadMoreLayout.handleLoadFail();
+            }
+        }
+        //        else
+        //            throw new IllegalArgumentException("RcvMultiAdapter: Must enableLoadMore()");
     }
 
     /**
@@ -722,8 +735,13 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     public void notifyLoadMoreHasNoMoreData()
     {
         if (isLoadMoreEnable())
-            mLoadMoreLayout.handleNoMoreData();
-        else
-            throw new IllegalArgumentException("RcvMultiAdapter: Must enableLoadMore()");
+        {
+            synchronized (mLoadMoreLayout)
+            {
+                mLoadMoreLayout.handleNoMoreData();
+            }
+        }
+        //        else
+        //            throw new IllegalArgumentException("RcvMultiAdapter: Must enableLoadMore()");
     }
 }
