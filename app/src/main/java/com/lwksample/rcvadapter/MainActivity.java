@@ -31,8 +31,17 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                //TODO 跳转到StickyDemo
+                //跳转到StickyDemo
                 startActivity(new Intent(MainActivity.this, StickyActivity.class));
+            }
+        });
+        actionBar.setRightClickListener02(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                //跳转到RefreshDemo
+                startActivity(new Intent(MainActivity.this, RefreshActivity.class));
             }
         });
 

@@ -181,6 +181,16 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     /**
      * 是否开启加载更多功能【使用默认布局】
      *
+     * @param enable 是否开启该功能
+     */
+    public void enableLoadMore(boolean enable)
+    {
+        enableLoadMore(enable, null);
+    }
+
+    /**
+     * 是否开启加载更多功能【使用默认布局】
+     *
      * @param enable   是否开启该功能
      * @param listener 加载更多监听
      */
@@ -201,6 +211,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         if (enable)
         {
             this.mLoadMoreLayout = layout;
+            mLoadMoreLayout.handleLoadInit();
             mLoadMoreLayout.setOnLoadMoreListener(listener);
         } else
         {

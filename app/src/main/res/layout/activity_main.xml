@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:is_left_as_back="true"
-            app:right_text01="StickyHeadDemo"
+            app:right_text01="Sticky"
+            app:right_text02="Refresh"
             app:title_text="使用示例"/>
 
         <!--LayoutManager-->

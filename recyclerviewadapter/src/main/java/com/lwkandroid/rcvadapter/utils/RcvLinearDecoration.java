@@ -25,6 +25,16 @@ public class RcvLinearDecoration extends RecyclerView.ItemDecoration
     //分割线样式
     private int mOrientation;
 
+    public static RcvLinearDecoration createDefaultVertical(Context context)
+    {
+        return new RcvLinearDecoration(context, LinearLayoutManager.VERTICAL);
+    }
+
+    public static RcvLinearDecoration createDefaultHorizontal(Context context)
+    {
+        return new RcvLinearDecoration(context, LinearLayoutManager.HORIZONTAL);
+    }
+
     /**
      * 默认分割线drawable，自定义风格
      *

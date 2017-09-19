@@ -26,6 +26,11 @@ public class RcvGridDecoration extends RecyclerView.ItemDecoration
     //分割线宽度
     private int mDividerWidth;
 
+    public static RcvGridDecoration createDefault(Context context)
+    {
+        return new RcvGridDecoration(context);
+    }
+
     public RcvGridDecoration(Context context)
     {
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
