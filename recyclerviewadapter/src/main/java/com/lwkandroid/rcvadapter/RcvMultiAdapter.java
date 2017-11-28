@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +22,16 @@ import com.lwkandroid.rcvadapter.ui.RcvDefLoadMoreView;
 import com.lwkandroid.rcvadapter.utils.RcvAlphaInAnim;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Function:RecycleView通用多布局适配器
  */
 public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
 {
+    private static final String TAG = "RcvMultiAdapter";
     //上下文
     protected Context mContext;
     //数据源
@@ -54,6 +58,8 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     protected int mAnimLastPosition = -1;
     //EmptyView的位置
     protected int mEmptyViewPosition = -1;
+    //存储点击事件的map
+    protected HashMap<Integer, OnChildClickListener<T>> mChildListenerMap;
 
     public RcvMultiAdapter(Context context, List<T> datas)
     {
@@ -313,7 +319,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     }
 
     @Override
-    public void onBindViewHolder(RcvHolder holder, int position)
+    public void onBindViewHolder(final RcvHolder holder, int position)
     {
         if (isInHeadViewPos(position) || isInFootViewPos(position) || isInEmptyStatus())
         {
@@ -325,7 +331,21 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         } else
         {
             //设置数据
-            mItemViewManager.bindView(holder, mDataList.get(position - getHeadCounts()), holder.getLayoutPosition());
+            final T data = mDataList.get(position - getHeadCounts());
+            mItemViewManager.bindView(holder, data, holder.getLayoutPosition());
+            //回调子View点击监听
+            for (Map.Entry<Integer, OnChildClickListener<T>> entry : mChildListenerMap.entrySet())
+            {
+                final int viewId = entry.getKey();
+                holder.setClickListener(viewId, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mChildListenerMap.get(viewId).onChildClicked(viewId, v, data, holder.getLayoutPosition());
+                    }
+                });
+            }
             //设置动画
             startItemAnim(holder, position);
         }
@@ -545,6 +565,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         }
     }
 
+
     /**
      * 刷新数据的方法
      */
@@ -708,9 +729,10 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
                     }
                 }
             }, 500);
+        } else
+        {
+            Log.e(TAG, "Can't invoke notifyLoadMoreSuccess() before you called enableLoadMore()");
         }
-        //        else
-        //            throw new IllegalArgumentException("RcvMultiAdapter: Must enableLoadMore()");
     }
 
     /**
@@ -724,9 +746,10 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
             {
                 mLoadMoreLayout.handleLoadFail();
             }
+        } else
+        {
+            Log.e(TAG, "Can't invoke notifyLoadMoreFail() before you called enableLoadMore()");
         }
-        //        else
-        //            throw new IllegalArgumentException("RcvMultiAdapter: Must enableLoadMore()");
     }
 
     /**
@@ -740,8 +763,27 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
             {
                 mLoadMoreLayout.handleNoMoreData();
             }
+        } else
+        {
+            Log.e(TAG, "Can't invoke notifyLoadMoreHasNoMoreData() before you called enableLoadMore()");
         }
-        //        else
-        //            throw new IllegalArgumentException("RcvMultiAdapter: Must enableLoadMore()");
+    }
+
+    /**
+     * 子View点击事件
+     */
+    public interface OnChildClickListener<T>
+    {
+        void onChildClicked(int viewId, View view, T t, int layoutPosition);
+    }
+
+    /**
+     * 添加子View点击事件
+     */
+    public void setOnChildClickListener(int viewId, OnChildClickListener<T> listener)
+    {
+        if (mChildListenerMap == null)
+            mChildListenerMap = new HashMap<>();
+        mChildListenerMap.put(viewId, listener);
     }
 }

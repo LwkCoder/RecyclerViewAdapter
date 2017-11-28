@@ -8,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -24,8 +25,9 @@ import com.lwkandroid.rcvadapter.utils.RcvLinearDecoration;
 /**
  * 效果界面
  */
-public class DetailActivity extends AppCompatActivity
+public class DetailActivity extends AppCompatActivity implements RcvMultiAdapter.OnChildClickListener
 {
+    private static final String TAG = "DetailActivity";
     private int viewTypeFlag;
     private RecyclerView mRecyclerView;
     private RcvMultiAdapter mAdapter;
@@ -158,6 +160,10 @@ public class DetailActivity extends AppCompatActivity
             });
         }
 
+        mAdapter.setOnChildClickListener(android.R.id.text1, this);
+        mAdapter.setOnChildClickListener(R.id.tv_left, this);
+        mAdapter.setOnChildClickListener(R.id.tv_right, this);
+
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -197,4 +203,20 @@ public class DetailActivity extends AppCompatActivity
         }, 1000);
     }
 
+    @Override
+    public void onChildClicked(int viewId, View view, Object o, int layoutPosition)
+    {
+        switch (viewId)
+        {
+            case android.R.id.text1:
+                Log.e(TAG, "onChildClicked: viewId=" + viewId + " data=" + o + " position=" + layoutPosition);
+                break;
+            case R.id.tv_left:
+                Log.e(TAG, "onChildClicked: viewId=" + viewId + " data=" + o + " position=" + layoutPosition);
+                break;
+            case R.id.tv_right:
+                Log.e(TAG, "onChildClicked: viewId=" + viewId + " data=" + o + " position=" + layoutPosition);
+                break;
+        }
+    }
 }

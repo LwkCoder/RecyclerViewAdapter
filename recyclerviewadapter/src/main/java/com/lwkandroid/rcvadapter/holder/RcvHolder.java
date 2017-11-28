@@ -32,7 +32,6 @@ public class RcvHolder extends RecyclerView.ViewHolder
         super(itemView);
         this.mContext = context;
         this.mConvertView = itemView;
-        mViews = new SparseArray<>();
     }
 
     public static RcvHolder get(Context context, View itemView)
@@ -65,6 +64,9 @@ public class RcvHolder extends RecyclerView.ViewHolder
      */
     public <T extends View> T findView(int viewId)
     {
+        if (mViews == null)
+            mViews = new SparseArray<>();
+
         View view = mViews.get(viewId);
         if (view == null)
         {
@@ -197,7 +199,9 @@ public class RcvHolder extends RecyclerView.ViewHolder
     {
         View view = findView(viewId);
         if (view != null)
+        {
             view.setOnClickListener(l);
+        }
         return this;
     }
 
@@ -230,4 +234,5 @@ public class RcvHolder extends RecyclerView.ViewHolder
         view.setChecked(checked);
         return this;
     }
+
 }
