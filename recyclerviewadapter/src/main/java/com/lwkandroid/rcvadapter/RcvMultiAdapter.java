@@ -331,21 +331,24 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         } else
         {
             //设置数据
-            final T data = mDataList.get(position - getHeadCounts());
+            T data = queryDataInPosition(position);
             mItemViewManager.bindView(holder, data, holder.getLayoutPosition());
             //回调子View点击监听
-            for (Map.Entry<Integer, OnChildClickListener<T>> entry : mChildListenerMap.entrySet())
-            {
-                final int viewId = entry.getKey();
-                holder.setClickListener(viewId, new View.OnClickListener()
+            if (mChildListenerMap != null)
+                for (Map.Entry<Integer, OnChildClickListener<T>> entry : mChildListenerMap.entrySet())
                 {
-                    @Override
-                    public void onClick(View v)
+                    final int viewId = entry.getKey();
+                    final T t = data;
+                    holder.setClickListener(viewId, new View.OnClickListener()
                     {
-                        mChildListenerMap.get(viewId).onChildClicked(viewId, v, data, holder.getLayoutPosition());
-                    }
-                });
-            }
+                        @Override
+                        public void onClick(View v)
+                        {
+                            mChildListenerMap.get(viewId)
+                                    .onChildClicked(viewId, v, t, holder.getLayoutPosition());
+                        }
+                    });
+                }
             //设置动画
             startItemAnim(holder, position);
         }
@@ -369,7 +372,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
             return RcvViewType.LOAD_MORE;
         } else if (useItemViewManager())
         {
-            return mItemViewManager.getItemViewType(mDataList.get(position - getHeadCounts()), position);
+            return mItemViewManager.getItemViewType(queryDataInPosition(position), position);
         } else
             return super.getItemViewType(position);
     }
@@ -481,7 +484,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
                 {
                     int position = viewHolder.getLayoutPosition();
                     mOnItemClickListener.onItemViewClicked(viewHolder,
-                            mDataList.get(position - getHeadCounts()), position);
+                            queryDataInPosition(position), position);
                 }
             }
         });
@@ -495,7 +498,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
                 {
                     int position = viewHolder.getLayoutPosition();
                     mOnItemLongClickListener.onItemViewLongClicked(viewHolder,
-                            mDataList.get(position - getHeadCounts()), position);
+                            queryDataInPosition(position), position);
                 }
                 return true;
             }
@@ -676,6 +679,16 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
             mDataList.removeAll(data);
             notifyDataSetChanged();
         }
+    }
+
+    //查询某个数据
+    protected T queryDataInPosition(int position)
+    {
+        T data = null;
+        int realIndex = position - getHeadCounts();
+        if (realIndex < mDataList.size())
+            data = mDataList.get(realIndex);
+        return data;
     }
 
     /**********************
