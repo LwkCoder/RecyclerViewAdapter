@@ -8,11 +8,21 @@ CSDN：http://blog.csdn.net/lwk520136/article/details/70787798<br />
 【最新版本号以[这里](https://github.com/Vanish136/RecyclerViewAdapter/releases)为准】
 
 ```
+#last-version请查看上面的最新版本号
+
+#AndroidStudio3.0以下
 //在自己项目里添加RecyclerView的引用
 compile 'com.android.support:recyclerview-v7:your-version'
-
 //添加该库的引用，并去除自带的RecyclerView引用，防止版本冲突
-compile("com.lwkandroid:recyclerviewadapter:1.2.5") {
+compile("com.lwkandroid:recyclerviewadapter:last-version") {
+    exclude(group: 'com.android.support', module: 'recyclerview-v7')
+}
+
+#AndroidStudio3.0以上
+//在自己项目里添加RecyclerView的引用
+implementation 'com.android.support:recyclerview-v7:your-version'
+//添加该库的引用，并去除自带的RecyclerView引用，防止版本冲突
+implementation("com.lwkandroid:recyclerviewadapter:last-version") {
     exclude(group: 'com.android.support', module: 'recyclerview-v7')
 }
 ```
