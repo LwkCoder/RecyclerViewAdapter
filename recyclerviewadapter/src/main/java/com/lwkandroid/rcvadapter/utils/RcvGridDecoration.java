@@ -3,8 +3,12 @@ package com.lwkandroid.rcvadapter.utils;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -18,7 +22,10 @@ public class RcvGridDecoration extends RecyclerView.ItemDecoration
     private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
 
     //分割线drawable
-    private Drawable mDivider;
+    private Drawable mDividerDrawable;
+
+    //绘制分割线的Paint
+    private Paint mDividerPaint;
 
     //分割线高度
     private int mDividerHeight;
@@ -26,25 +33,91 @@ public class RcvGridDecoration extends RecyclerView.ItemDecoration
     //分割线宽度
     private int mDividerWidth;
 
+    /**
+     * 创建默认分割线
+     */
     public static RcvGridDecoration createDefault(Context context)
     {
         return new RcvGridDecoration(context);
     }
 
+    /**
+     * 创建自定义色值默认分割线
+     *
+     * @param color 色值
+     */
+    public static RcvGridDecoration createDefault(int color)
+    {
+        return new RcvGridDecoration(color);
+    }
+
+    /**
+     * 默认Drawable的分割线
+     *
+     * @param context 上下文
+     */
     public RcvGridDecoration(Context context)
     {
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
-        mDivider = a.getDrawable(0);
+        mDividerDrawable = a.getDrawable(0);
         a.recycle();
-        mDividerHeight = mDivider.getIntrinsicHeight();
-        mDividerWidth = mDivider.getIntrinsicWidth();
+        mDividerHeight = mDividerDrawable.getIntrinsicHeight();
+        mDividerWidth = mDividerDrawable.getIntrinsicWidth();
     }
 
+    /**
+     * 自定义Drawable的分割线
+     *
+     * @param context  上下文
+     * @param drawable 自定义Drawable
+     */
     public RcvGridDecoration(Context context, Drawable drawable)
     {
-        mDivider = drawable;
-        mDividerHeight = mDivider.getIntrinsicHeight();
-        mDividerWidth = mDivider.getIntrinsicWidth();
+        mDividerDrawable = drawable;
+        mDividerHeight = mDividerDrawable.getIntrinsicHeight();
+        mDividerWidth = mDividerDrawable.getIntrinsicWidth();
+    }
+
+    /**
+     * 自定义Drawable的分割线
+     *
+     * @param context       上下文
+     * @param drawableResId 自定义Drawable的资源id
+     */
+    public RcvGridDecoration(Context context, @DrawableRes int drawableResId)
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            mDividerDrawable = context.getResources().getDrawable(drawableResId, null);
+        else
+            mDividerDrawable = context.getResources().getDrawable(drawableResId);
+        mDividerHeight = mDividerDrawable.getIntrinsicHeight();
+        mDividerWidth = mDividerDrawable.getIntrinsicWidth();
+    }
+
+    /**
+     * 自定义Color的分割线（默认分割线宽高均为1px）
+     *
+     * @param color 色值
+     */
+    public RcvGridDecoration(@ColorInt int color)
+    {
+        this(color, 1, 1);
+    }
+
+    /**
+     * 自定义Color的分割线
+     *
+     * @param color  色值
+     * @param width  宽度【单位px】
+     * @param height 高度【单位px】
+     */
+    public RcvGridDecoration(@ColorInt int color, int width, int height)
+    {
+        mDividerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mDividerPaint.setColor(color);
+        mDividerPaint.setStyle(Paint.Style.FILL);
+        mDividerWidth = width;
+        mDividerHeight = height;
     }
 
     @Override
@@ -78,8 +151,14 @@ public class RcvGridDecoration extends RecyclerView.ItemDecoration
             final int right = child.getRight() + params.rightMargin + mDividerWidth;
             final int top = child.getBottom() + params.bottomMargin;
             final int bottom = top + mDividerHeight;
-            mDivider.setBounds(left, top, right, bottom);
-            mDivider.draw(c);
+            if (mDividerDrawable != null)
+            {
+                mDividerDrawable.setBounds(left, top, right, bottom);
+                mDividerDrawable.draw(c);
+            } else if (mDividerPaint != null)
+            {
+                c.drawRect(left, top, right, bottom, mDividerPaint);
+            }
         }
     }
 
@@ -97,8 +176,14 @@ public class RcvGridDecoration extends RecyclerView.ItemDecoration
             final int left = child.getRight() + params.rightMargin;
             final int right = left + mDividerWidth;
 
-            mDivider.setBounds(left, top, right, bottom);
-            mDivider.draw(c);
+            if (mDividerDrawable != null)
+            {
+                mDividerDrawable.setBounds(left, top, right, bottom);
+                mDividerDrawable.draw(c);
+            } else if (mDividerPaint != null)
+            {
+                c.drawRect(left, top, right, bottom, mDividerPaint);
+            }
         }
     }
 

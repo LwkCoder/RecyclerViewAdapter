@@ -1,6 +1,7 @@
 package com.lwksample.rcvadapter;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -57,11 +58,11 @@ public class DetailActivity extends AppCompatActivity implements RcvMultiAdapter
         {
             case ParamsFlag.LAYOUT_MANAGER_LINEAR:
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(DetailActivity.this, LinearLayoutManager.VERTICAL, false));
-                mRecyclerView.addItemDecoration(new RcvLinearDecoration(DetailActivity.this, LinearLayoutManager.VERTICAL));
+                mRecyclerView.addItemDecoration(RcvLinearDecoration.createDefaultVertical(Color.DKGRAY));
                 break;
             case ParamsFlag.LAYOUT_MANAGER_GRID:
                 mRecyclerView.setLayoutManager(new GridLayoutManager(DetailActivity.this, 3));
-                mRecyclerView.addItemDecoration(new RcvGridDecoration(DetailActivity.this));
+                mRecyclerView.addItemDecoration(new RcvGridDecoration(Color.BLUE));
                 break;
             case ParamsFlag.LAYOUT_MANAGER_STAGGER:
                 mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));

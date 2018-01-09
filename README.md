@@ -203,12 +203,43 @@ mAdapter.enableItemShowingAnim(true, ? extends RcvBaseAnimation);
 
 **7. 添加分割线，直接上代码：**
 
+**1.2.9版本针对分割线进行了重写，原有方法不变，新增支持自定义颜色和部分快速创建的方法：**
 ```
-//适用于LinearLayoutManager
-mRecyclerView.addItemDecoration(new RcvLinearDecoration(context, LinearLayoutManager.VERTICAL));
+#适用于LinearLayoutManager
+//创建默认竖直排列的分割线
+RcvLinearDecoration.createDefaultVertical(Context context);
+//创建自定义色值默认竖直排列的分割线
+RcvLinearDecoration.createDefaultVertical(int color);
+//创建默认水平排列的分割线
+RcvLinearDecoration.createDefaultHorizontal(Context context);
+//创建自定义色值默认水平排列的分割线
+RcvLinearDecoration.createDefaultHorizontal(int color);
+//构造方法：默认Drawable分割线
+new RcvLinearDecoration(Context context, int orientation);
+//构造方法：自定义Drawable分割线
+new RcvLinearDecoration(Context context, Drawable drawable, int orientation);
+//构造方法：自定义Drawable分割线
+new RcvLinearDecoration(Context context, @DrawableRes int drawableResId, int orientation);
+//构造方法：自定义Color分割线（宽度或者高度默认1px）
+new RcvLinearDecoration(@ColorInt int color, int orientation);
+//构造方法：自定义Color分割线
+new RcvLinearDecoration(@ColorInt int color, int size, int orientation);
 
-//适用于GridLayoutManager、StaggeredGridLayoutManager
-mRecyclerView.addItemDecoration(new RcvGridDecoration(context));
+#适用于GridLayoutManager、StaggeredGridLayoutManager
+//创建默认分割线
+RcvGridDecoration.createDefault(Context context);
+//创建自定义色值默认分割线
+RcvGridDecoration.createDefault(int color);
+//构造方法：默认Drawable的分割线
+new RcvGridDecoration(Context context);
+//构造方法：自定义Drawable的分割线
+new RcvGridDecoration(Context context, Drawable drawable);
+//构造方法：自定义Drawable的分割线
+new RcvGridDecoration(Context context, @DrawableRes int drawableResId);
+//构造方法：自定义Color的分割线（默认分割线宽高均为1px）
+new RcvGridDecoration(@ColorInt int color);
+//构造方法：自定义Color的分割线
+new RcvGridDecoration(@ColorInt int color, int width, int height);
 ```
 
 **注：** <br />

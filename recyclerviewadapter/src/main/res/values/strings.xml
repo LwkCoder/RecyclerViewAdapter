@@ -1,5 +1,5 @@
 <resources>
-    <string name="rcv_loadmore_init">滑倒底部加载更多</string>
+    <string name="rcv_loadmore_init">滑到底部加载更多</string>
     <string name="rcv_loadmore_loading">正在加载...</string>
     <string name="rcv_loadmore_success">加载成功</string>
     <string name="rcv_loadmore_fail">加载失败，请点击重试</string>

@@ -251,6 +251,14 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     }
 
     /**
+     * 获取设置的空数据占位View
+     */
+    public View getEmptyView()
+    {
+        return mEmptyView;
+    }
+
+    /**
      * 开启子item展示动画
      * [默认为AlphaIn动画]
      *
@@ -289,9 +297,14 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         if (viewType == RcvViewType.EMPTY)
         {
             if (mEmptyView != null)
+            {
                 return RcvHolder.get(mContext, mEmptyView);
-            else
+            } else
+            {
+                RcvHolder emptyHolder = RcvHolder.get(mContext, parent, mEmptyViewId);
+                mEmptyView = emptyHolder.getConvertView();
                 return RcvHolder.get(mContext, parent, mEmptyViewId);
+            }
         } else if (viewType == RcvViewType.LOAD_MORE && isLoadMoreEnable())
         {
             return RcvHolder.get(mContext, mLoadMoreLayout);
