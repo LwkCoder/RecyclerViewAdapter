@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion COMPILE_SDK_VERSION as int
-    buildToolsVersion BUILD_TOOLS_VERSION
+    //    buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
         applicationId APPLICATION_ID
@@ -21,8 +21,9 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile "com.android.support:appcompat-v7:${LIB_ANDROID_SUPPORT_VERSION}"
-    compile project(':recyclerviewadapter')
-    compile 'com.lwkandroid.widget:ComActionBar:1.0.2'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "com.android.support:appcompat-v7:${LIB_ANDROID_SUPPORT_VERSION}"
+//    implementation "com.android.support:recyclerview-v7:${LIB_ANDROID_SUPPORT_VERSION}"
+    implementation project(':recyclerviewadapter')
+    implementation 'com.lwkandroid.widget:ComActionBar:1.0.2'
 }
