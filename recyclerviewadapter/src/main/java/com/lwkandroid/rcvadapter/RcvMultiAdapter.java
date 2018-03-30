@@ -345,7 +345,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         {
             //设置数据
             T data = queryDataInPosition(position);
-            mItemViewManager.bindView(holder, data, holder.getLayoutPosition());
+            onBindView(holder, data, position);
             //回调子View点击监听
             if (mChildListenerMap != null)
                 for (Map.Entry<Integer, OnChildClickListener<T>> entry : mChildListenerMap.entrySet())
@@ -365,6 +365,12 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
             //设置动画
             startItemAnim(holder, position);
         }
+    }
+
+    //最终执行绑定数据操作的方法
+    protected void onBindView(final RcvHolder holder, T data, int position)
+    {
+        mItemViewManager.bindView(holder, data, position);
     }
 
     @Override

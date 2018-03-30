@@ -1,6 +1,7 @@
 package com.lwkandroid.rcvadapter.base;
 
 
+import com.lwkandroid.rcvadapter.RcvMultiAdapter;
 import com.lwkandroid.rcvadapter.holder.RcvHolder;
 
 /**
@@ -8,6 +9,33 @@ import com.lwkandroid.rcvadapter.holder.RcvHolder;
  */
 public abstract class RcvBaseItemView<T>
 {
+    protected RcvMultiAdapter<T> mAdapter;
+
+    public RcvBaseItemView()
+    {
+    }
+
+    public RcvBaseItemView(RcvMultiAdapter<T> mAdapter)
+    {
+        this.mAdapter = mAdapter;
+    }
+
+    /**
+     * 绑定适配器
+     */
+    public void setAdapter(RcvMultiAdapter<T> adapter)
+    {
+        this.mAdapter = adapter;
+    }
+
+    /**
+     * 获取适配器
+     */
+    protected RcvMultiAdapter<T> getAdapter()
+    {
+        return mAdapter;
+    }
+
     /**
      * 子类实现此方法返回对应的子布局id
      *
