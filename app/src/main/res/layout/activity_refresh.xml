@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.lwksample.rcvadapter.RefreshActivity">
+    tools:context="com.lwksample.rcvadapter.refresh.RefreshActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rcv_simple"

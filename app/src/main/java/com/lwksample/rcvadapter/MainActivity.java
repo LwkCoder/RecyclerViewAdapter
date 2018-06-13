@@ -8,6 +8,7 @@ import android.widget.CheckBox;
 import android.widget.RadioGroup;
 
 import com.lwk.comactionbar.ComActionBar;
+import com.lwksample.rcvadapter.refresh.RefreshActivity;
 
 public class MainActivity extends AppCompatActivity
 {
