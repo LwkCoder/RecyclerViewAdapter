@@ -1,6 +1,7 @@
 package com.lwkandroid.rcvadapter;
 
 import android.content.Context;
+import android.os.Looper;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -60,6 +61,8 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     protected int mEmptyViewPosition = -1;
     //存储点击事件的map
     protected HashMap<Integer, OnChildClickListener<T>> mChildListenerMap;
+    //主线程handler
+    protected android.os.Handler mHandler = new android.os.Handler(Looper.getMainLooper());
 
     public RcvMultiAdapter(Context context, List<T> datas)
     {
@@ -212,18 +215,38 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
      * @param layout   自定义加载更多布局
      * @param listener 加载更多监听
      */
-    public void enableLoadMore(boolean enable, RcvBaseLoadMoreView layout, RcvLoadMoreListener listener)
+    public void enableLoadMore(boolean enable, RcvBaseLoadMoreView layout, final RcvLoadMoreListener listener)
     {
         if (enable)
         {
             this.mLoadMoreLayout = layout;
-            mLoadMoreLayout.handleLoadInit();
-            mLoadMoreLayout.setOnLoadMoreListener(listener);
+            mHandler.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    if (mLoadMoreLayout != null)
+                    {
+                        mLoadMoreLayout.handleLoadInit();
+                        mLoadMoreLayout.setOnLoadMoreListener(listener);
+                        notifyDataSetChanged();
+                    }
+                }
+            });
         } else
         {
-            this.mLoadMoreLayout = null;
+            mHandler.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    if (mLoadMoreLayout != null)
+                        mLoadMoreLayout.handleLoadInit();
+                    mLoadMoreLayout = null;
+                    notifyDataSetChanged();
+                }
+            });
         }
-        notifyDataSetChanged();
     }
 
     /**
@@ -231,7 +254,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
      */
     public boolean isLoadMoreEnable()
     {
-        return mLoadMoreLayout != null ? true : false;
+        return mLoadMoreLayout != null;
     }
 
     /**
@@ -735,32 +758,38 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         {
             synchronized (mLoadMoreLayout)
             {
-                mLoadMoreLayout.handleLoadSuccess();
-            }
-            //延迟刷新UI,让用户看见加载结果
-            mLoadMoreLayout.postDelayed(new Runnable()
-            {
-                @Override
-                public void run()
+                mHandler.post(new Runnable()
                 {
-                    //添加数据
-                    if (newDataList != null && newDataList.size() > 0)
+                    @Override
+                    public void run()
                     {
-                        int posStart = getHeadCounts() + getEmptyViewCounts() + getDataSize();
-                        mDataList.addAll(newDataList);
-                        notifyItemRangeInserted(posStart, newDataList.size());
+                        mLoadMoreLayout.handleLoadSuccess();
                     }
-                    //刷新UI
-                    //因为延迟加载，有可能导致LoadMoreView已经为空，需要判断
-                    if (mLoadMoreLayout != null)
+                });
+                //延迟刷新UI,让用户看见加载结果
+                mHandler.postDelayed(new Runnable()
+                {
+                    @Override
+                    public void run()
                     {
+                        //因为延迟加载，有可能导致LoadMoreView已经为空，需要判断
+                        if (!isLoadMoreEnable())
+                            return;
+                        //添加数据
+                        if (newDataList != null && newDataList.size() > 0)
+                        {
+                            int posStart = getHeadCounts() + getEmptyViewCounts() + getDataSize();
+                            mDataList.addAll(newDataList);
+                            notifyItemRangeInserted(posStart, newDataList.size());
+                        }
+                        //刷新UI
                         if (hasMoreData)
                             mLoadMoreLayout.handleLoadInit();
                         else
                             mLoadMoreLayout.handleNoMoreData();
                     }
-                }
-            }, 500);
+                }, 500);
+            }
         } else
         {
             Log.e(TAG, "Can't invoke notifyLoadMoreSuccess() before you called enableLoadMore()");
@@ -776,7 +805,14 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         {
             synchronized (mLoadMoreLayout)
             {
-                mLoadMoreLayout.handleLoadFail();
+                mHandler.post(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        mLoadMoreLayout.handleLoadFail();
+                    }
+                });
             }
         } else
         {
@@ -793,7 +829,14 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         {
             synchronized (mLoadMoreLayout)
             {
-                mLoadMoreLayout.handleNoMoreData();
+                mHandler.post(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        mLoadMoreLayout.handleNoMoreData();
+                    }
+                });
             }
         } else
         {
