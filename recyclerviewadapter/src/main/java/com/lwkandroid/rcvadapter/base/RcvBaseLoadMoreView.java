@@ -1,6 +1,8 @@
 package com.lwkandroid.rcvadapter.base;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -12,6 +14,7 @@ import com.lwkandroid.rcvadapter.listener.RcvLoadMoreListener;
  */
 public abstract class RcvBaseLoadMoreView extends RelativeLayout
 {
+    private Handler mHandler = new Handler(Looper.getMainLooper());
     /**
      * 初始状态：未触发加载时的状态
      */
@@ -114,50 +117,57 @@ public abstract class RcvBaseLoadMoreView extends RelativeLayout
     /**
      * 改变状态
      */
-    private void changeStatus(int status)
+    private void changeStatus(final int status)
     {
-        //待加载
-        if (status == STATUS_INIT)
+        mHandler.post(new Runnable()
         {
-            setBeforeLoadingUI();
-        }
-        //正在加载中
-        else if (status == STATUS_LOADING)
-        {
-            if (mCurStatus == STATUS_NOMOREDATA || mCurStatus == STATUS_LOADING)
-                return;
-            setLoadingUI();
-            if (mListener != null)
-                mListener.onLoadMoreRequest();
-            mLayoutContent.setOnClickListener(null);
-        }
-        //加载成功
-        else if (status == STATUS_SUCCESS)
-        {
-            setLoadSuccessUI();
-        }
-        //加载失败
-        else if (status == STATUS_FAIL)
-        {
-            setLoadFailUI();
-            //点击后触发加载更多
-            mLayoutContent.setOnClickListener(new OnClickListener()
+            @Override
+            public void run()
             {
-                @Override
-                public void onClick(View v)
+                //待加载
+                if (status == STATUS_INIT)
                 {
-                    changeStatus(STATUS_LOADING);
+                    setBeforeLoadingUI();
                 }
-            });
-        }
-        //没有更多数据
-        else if (status == STATUS_NOMOREDATA)
-        {
-            setNoMoreDataUI();
-        }
+                //正在加载中
+                else if (status == STATUS_LOADING)
+                {
+                    if (mCurStatus == STATUS_NOMOREDATA || mCurStatus == STATUS_LOADING)
+                        return;
+                    setLoadingUI();
+                    if (mListener != null)
+                        mListener.onLoadMoreRequest();
+                    mLayoutContent.setOnClickListener(null);
+                }
+                //加载成功
+                else if (status == STATUS_SUCCESS)
+                {
+                    setLoadSuccessUI();
+                }
+                //加载失败
+                else if (status == STATUS_FAIL)
+                {
+                    setLoadFailUI();
+                    //点击后触发加载更多
+                    mLayoutContent.setOnClickListener(new OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            changeStatus(STATUS_LOADING);
+                        }
+                    });
+                }
+                //没有更多数据
+                else if (status == STATUS_NOMOREDATA)
+                {
+                    setNoMoreDataUI();
+                }
 
-        //同步标记
-        mCurStatus = status;
+                //同步标记
+                mCurStatus = status;
+            }
+        });
     }
 
     /**

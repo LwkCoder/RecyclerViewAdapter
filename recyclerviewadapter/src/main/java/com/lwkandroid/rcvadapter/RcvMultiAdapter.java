@@ -758,14 +758,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         {
             synchronized (mLoadMoreLayout)
             {
-                mHandler.post(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        mLoadMoreLayout.handleLoadSuccess();
-                    }
-                });
+                mLoadMoreLayout.handleLoadSuccess();
                 //延迟刷新UI,让用户看见加载结果
                 mHandler.postDelayed(new Runnable()
                 {
@@ -805,14 +798,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         {
             synchronized (mLoadMoreLayout)
             {
-                mHandler.post(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        mLoadMoreLayout.handleLoadFail();
-                    }
-                });
+                mLoadMoreLayout.handleLoadFail();
             }
         } else
         {
@@ -829,14 +815,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         {
             synchronized (mLoadMoreLayout)
             {
-                mHandler.post(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        mLoadMoreLayout.handleNoMoreData();
-                    }
-                });
+                mLoadMoreLayout.handleNoMoreData();
             }
         } else
         {
