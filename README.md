@@ -129,43 +129,22 @@ mAdapter.setEmptyView(layoutId);
 **4.设置滑动到底部自动加载更多，先上示例代码吧：**
 
 ```
-//最简单的方式，使用默认的样式
-mAdapter.enableLoadMore(true, new RcvLoadMoreListener()
-{
-    @Override
-    public void onLoadMoreRequest()
-    {
-        //TODO 在这里实现加载更多
-
-        /*加载完成后可调用以下方法快速回调给适配器*/
-        //加载失败
-        mAdapter.notifyLoadMoreFail();
-        //加载成功，第二个参数代表是否还有更多数据，如果为false和下面的方法效果一样
-        mAdapter.notifyLoadMoreSuccess(newDatas, false);
-        //往后没有更多数据，不会再触发加载更多
-        mAdapter.notifyLoadMoreHasNoMoreData();
-    }
-});
-
-//自定义样式
-mAdapter.enableLoadMore(true, ? extends RcvBaseLoadMoreView,new RcvLoadMoreListener()
-{
-    @Override
-    public void onLoadMoreRequest()
-    {
-	    //TODO 在这里实现加载更多
-
-        /*加载完成后可调用以下方法快速回调给适配器*/
-        //加载失败
-        mAdapter.notifyLoadMoreFail();
-        //加载成功，第二个参数代表是否还有更多数据，如果为false和下面的方法效果一样
-        mAdapter.notifyLoadMoreSuccess(newDatas, false);
-        //往后没有更多数据，不会再触发加载更多
-        mAdapter.notifyLoadMoreHasNoMoreData();
-    }
-});
+//先设置加载样式，可继承RcvBaseLoadMoreView实现自定义样式
+RcvDefLoadMoreView loadMoreView = new RcvDefLoadMoreView.Builder()
+                .setBgColor(Color.GREEN)
+                .setTextColor(Color.RED)
+                .build(this);
+mAdapter.setLoadMoreLayout(loadMoreView);
+//再开启并设置监听
+mAdapter.enableLoadMore(new RcvLoadMoreListener()
+        {
+            @Override
+            public void onLoadMoreRequest()
+            {
+               //TODO 在这里实现加载更多
+            }
+        });
 ```
-
 **注：** <br />
 ① 默认的样式实现是类`RcvDefLoadMoreView` <br />
 ② 如需自定义样式，只需继承`RcvBaseLoadMoreView`，只要重写各状态UI的实现，无须关心状态切换，可参考`RcvDefLoadMoreView`内的实现方式。
