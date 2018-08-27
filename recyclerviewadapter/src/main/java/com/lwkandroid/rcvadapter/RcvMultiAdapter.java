@@ -44,6 +44,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     protected SparseArray<View> mFooterViews;
     //底部加载更多的布局
     protected RcvBaseLoadMoreView mLoadMoreLayout;
+    protected boolean mIsLoadMoreEnable = false;
     //行布局点击监听
     protected RcvItemViewClickListener<T> mOnItemClickListener;
     //行布局长按监听
@@ -185,33 +186,39 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     }
 
     /**
+     * 请使用setLoadMoreLayout(RcvBaseLoadMoreView view)、disableLoadMore()、enableLoadMore(RcvLoadMoreListener listener)
      * 是否开启加载更多功能【使用默认布局】
      *
      * @param enable 是否开启该功能
      */
+    @Deprecated
     public void enableLoadMore(boolean enable)
     {
         enableLoadMore(enable, null);
     }
 
     /**
+     * 请使用setLoadMoreLayout(RcvBaseLoadMoreView view)、disableLoadMore()、enableLoadMore(RcvLoadMoreListener listener)
      * 是否开启加载更多功能【使用默认布局】
      *
      * @param enable   是否开启该功能
      * @param listener 加载更多监听
      */
+    @Deprecated
     public void enableLoadMore(boolean enable, RcvLoadMoreListener listener)
     {
-        enableLoadMore(enable, new RcvDefLoadMoreView(mContext), listener);
+        enableLoadMore(enable, new RcvDefLoadMoreView.Builder().build(mContext), listener);
     }
 
     /**
+     * 请使用setLoadMoreLayout(RcvBaseLoadMoreView view)、disableLoadMore()、enableLoadMore(RcvLoadMoreListener listener)
      * 是否开启加载更多功能
      *
      * @param enable   是否开启该功能
      * @param layout   自定义加载更多布局
      * @param listener 加载更多监听
      */
+    @Deprecated
     public void enableLoadMore(boolean enable, RcvBaseLoadMoreView layout, RcvLoadMoreListener listener)
     {
         if (enable)
@@ -227,11 +234,62 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     }
 
     /**
+     * 设置加载更多布局
+     * 【设置后不可更改】
+     *
+     * @param view
+     */
+    public void setLoadMoreLayout(RcvBaseLoadMoreView view)
+    {
+        this.mLoadMoreLayout = view;
+    }
+
+    /**
+     * 禁用加载更多
+     */
+    public void disableLoadMore()
+    {
+        if (isLoadMoreEnable())
+        {
+            mLoadMoreLayout.handleLoadInit();
+            mLoadMoreLayout.setOnLoadMoreListener(null);
+            mIsLoadMoreEnable = false;
+            notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 禁用加载更多
+     */
+    public void enableLoadMore(RcvLoadMoreListener listener)
+    {
+        if (isLoadMoreEnable())
+            return;
+        if (mLoadMoreLayout == null)
+        {
+            Log.e(TAG, "LoadMoreLayout can't be empty before enableLoadMore() called!!!");
+            return;
+        }
+        mLoadMoreLayout.handleLoadInit();
+        mLoadMoreLayout.setOnLoadMoreListener(listener);
+        mIsLoadMoreEnable = true;
+        notifyDataSetChanged();
+    }
+
+    /**
      * 是否开启加载更多功能
      */
     public boolean isLoadMoreEnable()
     {
-        return mLoadMoreLayout != null ? true : false;
+        return mIsLoadMoreEnable && mLoadMoreLayout != null;
+    }
+
+    /**
+     * 加载更多布局是否为空
+     */
+    public boolean isLoadMoreLayoutEmpty()
+    {
+        return mLoadMoreLayout == null;
     }
 
     /**

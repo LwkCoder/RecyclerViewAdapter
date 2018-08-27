@@ -26,14 +26,13 @@ public class RefreshActivity extends AppCompatActivity implements
     SwipeRefreshLayout mRefreshLayout;
     RecyclerView mRecyclerView;
     Adapter mAdapter;
-    RcvDefLoadMoreView mLoadMoreView;
 
     //代表上次操作的页码
     private int mLastPage = 0;
     //代表当前页码
     private int mCurrentPage = 0;
     //每页加载数据量
-    private final int PAGE_SIZE =20;
+    private final int PAGE_SIZE = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -48,12 +47,13 @@ public class RefreshActivity extends AppCompatActivity implements
         mRecyclerView.addItemDecoration(RcvLinearDecoration.createDefaultVertical(this));
         mAdapter = new Adapter(this, null);
         mAdapter.setEmptyView(R.layout.layout_emptyview02);
-        mRecyclerView.setAdapter(mAdapter);
-
-        mLoadMoreView = new RcvDefLoadMoreView.Builder()
+        RcvDefLoadMoreView loadMoreView = new RcvDefLoadMoreView.Builder()
                 .setBgColor(Color.GREEN)
                 .setTextColor(Color.RED)
                 .build(this);
+        mAdapter.setLoadMoreLayout(loadMoreView);
+        mRecyclerView.setAdapter(mAdapter);
+
         mRefreshLayout.setOnRefreshListener(this);
 
         //初始化数据
@@ -65,7 +65,7 @@ public class RefreshActivity extends AppCompatActivity implements
     public void onRefresh()
     {
         //触发刷新的方法
-        mAdapter.enableLoadMore(false);
+        mAdapter.disableLoadMore();
         mLastPage = mCurrentPage;
         mCurrentPage = 0;
         mPresenter.requestData(true, mCurrentPage, PAGE_SIZE);
@@ -78,13 +78,13 @@ public class RefreshActivity extends AppCompatActivity implements
         //刷新成功后的方法
         mAdapter.refreshDatas(dataList);
         //开启加载更多
-        mAdapter.enableLoadMore(true, mLoadMoreView, this);
+        mAdapter.enableLoadMore(this);
         //如果后续没有更多数据，提示用户
         if (!hasMoreData)
             mAdapter.notifyLoadMoreHasNoMoreData();
         //如果当前页一条数据都没有，直接关闭加载更多功能
         if (dataList == null || dataList.size() == 0)
-            mAdapter.enableLoadMore(false);
+            mAdapter.disableLoadMore();
     }
 
     @Override
