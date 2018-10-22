@@ -22,8 +22,8 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "com.android.support:appcompat-v7:${LIB_ANDROID_SUPPORT_VERSION}"
+    implementation 'androidx.appcompat:appcompat:1.0.0'
 //    implementation "com.android.support:recyclerview-v7:${LIB_ANDROID_SUPPORT_VERSION}"
     implementation project(':recyclerviewadapter')
-    implementation 'com.lwkandroid.widget:ComActionBar:1.0.2'
+    implementation 'com.lwkandroid.widget:ComActionBar:1.1.6'
 }

@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.lwk.comactionbar.ComActionBar
+        <com.lwkandroid.widget.comactionbar.ComActionBar
             android:id="@+id/cab_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

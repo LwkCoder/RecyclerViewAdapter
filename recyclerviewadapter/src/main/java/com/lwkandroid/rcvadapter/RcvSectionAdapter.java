@@ -1,9 +1,6 @@
 package com.lwkandroid.rcvadapter;
 
 import android.content.Context;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.ViewGroup;
 
 import com.lwkandroid.rcvadapter.base.RcvBaseItemView;
@@ -12,6 +9,10 @@ import com.lwkandroid.rcvadapter.eunm.RcvViewType;
 import com.lwkandroid.rcvadapter.holder.RcvHolder;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 /**
  * Created by LWK

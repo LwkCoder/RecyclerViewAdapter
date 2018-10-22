@@ -1,14 +1,15 @@
 package com.lwksample.rcvadapter;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
-import com.lwk.comactionbar.ComActionBar;
 import com.lwkandroid.rcvadapter.ui.RcvStickyLayout;
+import com.lwkandroid.widget.comactionbar.ComActionBar;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class StickyActivity extends AppCompatActivity implements View.OnClickListener
 {
