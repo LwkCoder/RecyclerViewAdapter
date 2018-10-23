@@ -1,6 +1,8 @@
 package com.lwksample.rcvadapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.widget.TextView;
 
 import com.lwkandroid.rcvadapter.RcvSectionAdapter;
 import com.lwkandroid.rcvadapter.bean.RcvSectionWrapper;
@@ -14,9 +16,9 @@ import java.util.List;
  * 2017/4/27
  */
 
-public class TestSectionAdapter extends RcvSectionAdapter<TestSection,TestData>
+public class TestSectionAdapter extends RcvSectionAdapter<TestSection, TestData>
 {
-    public TestSectionAdapter(Context context, List<RcvSectionWrapper<TestSection,TestData>> datas)
+    public TestSectionAdapter(Context context, List<RcvSectionWrapper<TestSection, TestData>> datas)
     {
         super(context, datas);
     }
@@ -30,18 +32,23 @@ public class TestSectionAdapter extends RcvSectionAdapter<TestSection,TestData>
     @Override
     public void onBindSectionView(RcvHolder holder, TestSection section, int position)
     {
-        holder.setTvText(R.id.tv_section_label,section.getSection());
+        holder.setTvText(R.id.tv_section_label, section.getSection());
     }
 
     @Override
     public int getDataLayoutId()
     {
-        return android.R.layout.simple_list_item_1;
+        return R.layout.adapter_item_long;
     }
 
     @Override
     public void onBindDataView(RcvHolder holder, TestData data, int position)
     {
-        holder.setTvText(android.R.id.text1, data.getContent());
+        TextView textView = holder.findView(R.id.tv_item_long);
+        if (position % 2 == 0)
+            textView.setBackgroundColor(Color.GREEN);
+        else
+            textView.setBackgroundColor(Color.RED);
+        textView.setText(data.getContent());
     }
 }

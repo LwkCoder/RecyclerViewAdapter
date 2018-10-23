@@ -31,7 +31,7 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 def lib_name = "RecyclerViewAdapter"
-version = "1.3.7"
+version = "1.3.8"
 group = "com.lwkandroid"
 def siteUrl = 'https://github.com/Vanish136/RecyclerViewAdapter'
 def gitUrl = 'https://github.com/Vanish136/RecyclerViewAdapter.git'

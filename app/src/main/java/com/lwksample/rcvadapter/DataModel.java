@@ -37,6 +37,15 @@ public class DataModel
                 TestData testData = new TestData("Item数据" + i);
                 list.add(new RcvSectionWrapper<TestSection, TestData>(false, null, testData));
             }
+            //            if (i == 0 || (i <= 60 && i % 4 == 0))
+            //            {
+            //                TestSection section = new TestSection("Label" + i);
+            //                list.add(new RcvSectionWrapper<TestSection, TestData>(true, section, null));
+            //            } else
+            //            {
+            //                TestData testData = new TestData("Item数据" + i);
+            //                list.add(new RcvSectionWrapper<TestSection, TestData>(false, null, testData));
+            //            }
         }
         return list;
     }
