@@ -4,11 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +17,12 @@ import com.lwkandroid.rcvadapter.listener.RcvItemViewLongClickListener;
 import com.lwkandroid.rcvadapter.listener.RcvLoadMoreListener;
 import com.lwkandroid.rcvadapter.utils.RcvGridDecoration;
 import com.lwkandroid.rcvadapter.utils.RcvLinearDecoration;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 /**
  * 效果界面
@@ -57,7 +58,7 @@ public class DetailActivity extends AppCompatActivity implements RcvMultiAdapter
         switch (layMgrFlag)
         {
             case ParamsFlag.LAYOUT_MANAGER_LINEAR:
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(DetailActivity.this, LinearLayoutManager.VERTICAL, false));
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(DetailActivity.this, RecyclerView.VERTICAL, false));
                 mRecyclerView.addItemDecoration(RcvLinearDecoration.createDefaultVertical(Color.DKGRAY));
                 break;
             case ParamsFlag.LAYOUT_MANAGER_GRID:
@@ -79,7 +80,7 @@ public class DetailActivity extends AppCompatActivity implements RcvMultiAdapter
             mAdapter = new TestMultiAdapter(this, null);
         } else if (viewTypeFlag == ParamsFlag.VIEW_TYPE_SECTION)
         {
-            mAdapter = new TestSectionAdapter(this, null);
+            mAdapter = new TestSectionMultiLabelAdapter(this, null);
         }
 
         //添加HeaderView、FooterView、LoadMore

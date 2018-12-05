@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class StickyActivity extends AppCompatActivity implements View.OnClickListener
 {
     private RecyclerView mRecyclerView;
-    private TestSectionAdapter mAdapter;
+    private TestSectionSingleLabelAdapter mAdapter;
     private RcvStickyLayout mStickyLayout;
 
     @Override
@@ -31,7 +31,7 @@ public class StickyActivity extends AppCompatActivity implements View.OnClickLis
         mRecyclerView.setLayoutManager(new LinearLayoutManager(StickyActivity.this));
         //        mRecyclerView.setLayoutManager(new GridLayoutManager(StickyActivity.this, 3));
         //        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        mAdapter = new TestSectionAdapter(this, DataModel.getSomeSectionData(80));
+        mAdapter = new TestSectionSingleLabelAdapter(this, DataModel.getSomeSectionData(80));
         mRecyclerView.setAdapter(mAdapter);
 
         mStickyLayout.attachToRecyclerView(mRecyclerView);

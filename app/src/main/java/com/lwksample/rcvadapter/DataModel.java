@@ -31,10 +31,12 @@ public class DataModel
             if (i != 0 && i <= 60 && i % 4 == 0)
             {
                 TestSection section = new TestSection("Label" + i);
+                section.setType(i % 3);
                 list.add(new RcvSectionWrapper<TestSection, TestData>(true, section, null));
             } else
             {
                 TestData testData = new TestData("Item数据" + i);
+                testData.setType(i % 2);
                 list.add(new RcvSectionWrapper<TestSection, TestData>(false, null, testData));
             }
             //            if (i == 0 || (i <= 60 && i % 4 == 0))
@@ -58,10 +60,12 @@ public class DataModel
             if (i != 0 && i <= 50 && i % 5 == 0)
             {
                 TestSection section = new TestSection("新增Label" + i);
+                section.setType(i % 3);
                 list.add(new RcvSectionWrapper<TestSection, TestData>(true, section, null));
             } else
             {
                 TestData testData = new TestData("新增Item数据" + i);
+                testData.setType(i % 2);
                 list.add(new RcvSectionWrapper<TestSection, TestData>(false, null, testData));
             }
         }

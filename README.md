@@ -128,6 +128,7 @@ mAdapter.setEmptyView(layoutId);
 
 **4.设置滑动到底部自动加载更多，先上示例代码吧：**
 
+**自1.4.0版本开始删除了之前的调用方式**
 ```
 //先设置加载样式，可继承RcvBaseLoadMoreView实现自定义样式
 RcvDefLoadMoreView loadMoreView = new RcvDefLoadMoreView.Builder()
@@ -144,6 +145,8 @@ mAdapter.enableLoadMore(new RcvLoadMoreListener()
                //TODO 在这里实现加载更多
             }
         });
+//禁止加载更多,通常用在配合下拉刷新的过程中
+mAdapter.disableLoadMore();
 ```
 **注：** <br />
 ① 默认的样式实现是类`RcvDefLoadMoreView` <br />
@@ -238,43 +241,199 @@ new RcvGridDecoration(@ColorInt int color, int width, int height);
 
 **8.嵌套Section，稍微复杂一点，配合代码讲解：**
 
-适配器继承自`RcvSectionAdapter`,指定两个泛型，第一个代表`Section`，第二个代表普通数据`Data`，但要注意的是，在将数据传入适配器前需要通过一个实体类`RcvSectionWrapper`将两种数据进行包装。
+**1.4.0版本开始删除以前的使用方法，采用下面的方式**
+
+带有Section功能的适配器为`RcvSectionMultiLabelAdapter`和`RcvSectionSingleLabelAdapter`,需要指定两个泛型，第一个代表`Section`，第二个代表普通数据`Data`，
+两者都支持多种Data类型的子布局，唯一不同的是，`RcvSectionMultiLabelAdapter`还支持多种Section类型的子布局，但不可以和`RcvStickyLayout`联动，而`RcvSectionSingleLabelAdapter`
+仅支持一种Section类型的子布局，但是可以和`RcvStickyLayout`联动。**需要注意的是，传给适配器的数据均需要自行预处理，用`RcvSectionWrapper`封装后才可传入适配器。**
 
 ```
-public class TestSectionAdapter extends RcvSectionAdapter<TestSection,TestData>
+#只有一种Section类型，配合多种Data类型的适配器
+public class TestSectionAdapter extends RcvSectionSingleLabelAdapter<TestSection, TestData>
 {
-    //注意构造函数里传入的数据集合必须是RcvSectionWrapper
-    public TestSectionAdapter(Context context, List<RcvSectionWrapper<TestSection,TestData>> datas)
+    public TestSectionAdapter(Context context, List<RcvSectionWrapper<TestSection, TestData>> datas)
     {
         super(context, datas);
     }
 
     @Override
-    public int getSectionLayoutId()
+    protected RcvBaseItemView<RcvSectionWrapper<TestSection, TestData>>[] createDataItemViews()
     {
-        //返回Section对应的布局Id
+        return new RcvBaseItemView[]{new DataItemView01(), new DataItemView02()};
+    }
+
+    @Override
+    public int getSectionLabelLayoutId()
+    {
         return R.layout.layout_section_label;
     }
 
     @Override
-    public void onBindSectionView(RcvHolder holder, TestSection section, int position)
+    public void onBindSectionLabelView(RcvHolder holder, TestSection section, int position)
     {
-        //绑定Section数据和UI的地方
-        holder.setTvText(R.id.tv_section_label,section.getSection());
+        holder.setTvText(R.id.tv_section_label, section.getSection());
+    }
+
+    //第一种Data ItemView
+    private class DataItemView01 extends RcvBaseItemView<RcvSectionWrapper<TestSection, TestData>>
+    {
+        @Override
+        public int getItemViewLayoutId()
+        {
+            return R.layout.adapter_item_long;
+        }
+
+        @Override
+        public boolean isForViewType(RcvSectionWrapper<TestSection, TestData> item, int position)
+        {
+            return !item.isSection() && item.getData().getType() == 0;
+        }
+
+        @Override
+        public void onBindView(RcvHolder holder, RcvSectionWrapper<TestSection, TestData> wrapper, int position)
+        {
+            TextView textView = holder.findView(R.id.tv_item_long);
+            textView.setBackgroundColor(Color.GREEN);
+            textView.setText("第一种数据类型：" + wrapper.getData().getContent());
+        }
+    }
+
+    //第二种Data ItemView
+    private class DataItemView02 extends RcvBaseItemView<RcvSectionWrapper<TestSection, TestData>>
+    {
+        @Override
+        public int getItemViewLayoutId()
+        {
+            return R.layout.adapter_item_short;
+        }
+
+        @Override
+        public boolean isForViewType(RcvSectionWrapper<TestSection, TestData> item, int position)
+        {
+            return !item.isSection() && item.getData().getType() != 0;
+        }
+
+        @Override
+        public void onBindView(RcvHolder holder, RcvSectionWrapper<TestSection, TestData> wrapper, int position)
+        {
+            TextView textView = holder.findView(R.id.tv_item_short);
+            textView.setBackgroundColor(Color.RED);
+            textView.setText("第二种数据类型：" + wrapper.getData().getContent());
+        }
+    }
+}
+
+#多种Section类型，配合多种Data类型的适配器
+public class TestSectionMultiLabelAdapter extends RcvSectionMultiLabelAdapter<TestSection, TestData>
+{
+    public TestSectionMultiLabelAdapter(Context context, List<RcvSectionWrapper<TestSection, TestData>> datas)
+    {
+        super(context, datas);
     }
 
     @Override
-    public int getDataLayoutId()
+    protected RcvBaseItemView<RcvSectionWrapper<TestSection, TestData>>[] createLabelItemViews()
     {
-        //返回Data对应的布局Id
-        return android.R.layout.simple_list_item_1;
+        return new RcvBaseItemView[]{new LabelItemView01(), new LabelItemView02()};
     }
 
     @Override
-    public void onBindDataView(RcvHolder holder, TestData data, int position)
+    protected RcvBaseItemView<RcvSectionWrapper<TestSection, TestData>>[] createDataItemViews()
     {
-        //绑定Data数据和UI的地方
-        holder.setTvText(android.R.id.text1, data.getContent());
+        return new RcvBaseItemView[]{new DataItemView01(), new DataItemView02()};
+    }
+
+
+    //第一种Label ItemView
+    private class LabelItemView01 extends RcvBaseItemView<RcvSectionWrapper<TestSection, TestData>>
+    {
+        @Override
+        public int getItemViewLayoutId()
+        {
+            return R.layout.layout_section_label;
+        }
+
+        @Override
+        public boolean isForViewType(RcvSectionWrapper<TestSection, TestData> item, int position)
+        {
+            return item.isSection() && item.getSection().getType() == 0;
+        }
+
+        @Override
+        public void onBindView(RcvHolder holder, RcvSectionWrapper<TestSection, TestData> wrapper, int position)
+        {
+            holder.setTvText(R.id.tv_section_label, wrapper.getSection().getSection());
+        }
+    }
+
+    //第二种Label ItemView
+    private class LabelItemView02 extends RcvBaseItemView<RcvSectionWrapper<TestSection, TestData>>
+    {
+        @Override
+        public int getItemViewLayoutId()
+        {
+            return R.layout.layout_section_label02;
+        }
+
+        @Override
+        public boolean isForViewType(RcvSectionWrapper<TestSection, TestData> item, int position)
+        {
+            return item.isSection() && item.getSection().getType() != 0;
+        }
+
+        @Override
+        public void onBindView(RcvHolder holder, RcvSectionWrapper<TestSection, TestData> wrapper, int position)
+        {
+            holder.setTvText(R.id.tv_section_label, wrapper.getSection().getSection());
+        }
+    }
+
+    //第一种Data ItemView
+    private class DataItemView01 extends RcvBaseItemView<RcvSectionWrapper<TestSection, TestData>>
+    {
+        @Override
+        public int getItemViewLayoutId()
+        {
+            return R.layout.adapter_item_long;
+        }
+
+        @Override
+        public boolean isForViewType(RcvSectionWrapper<TestSection, TestData> item, int position)
+        {
+            return !item.isSection() && item.getData().getType() == 0;
+        }
+
+        @Override
+        public void onBindView(RcvHolder holder, RcvSectionWrapper<TestSection, TestData> wrapper, int position)
+        {
+            TextView textView = holder.findView(R.id.tv_item_long);
+            textView.setBackgroundColor(Color.GREEN);
+            textView.setText("第一种数据类型：" + wrapper.getData().getContent());
+        }
+    }
+
+    //第二种Data ItemView
+    private class DataItemView02 extends RcvBaseItemView<RcvSectionWrapper<TestSection, TestData>>
+    {
+        @Override
+        public int getItemViewLayoutId()
+        {
+            return R.layout.adapter_item_short;
+        }
+
+        @Override
+        public boolean isForViewType(RcvSectionWrapper<TestSection, TestData> item, int position)
+        {
+            return !item.isSection() && item.getData().getType() != 0;
+        }
+
+        @Override
+        public void onBindView(RcvHolder holder, RcvSectionWrapper<TestSection, TestData> wrapper, int position)
+        {
+            TextView textView = holder.findView(R.id.tv_item_short);
+            textView.setBackgroundColor(Color.RED);
+            textView.setText("第二种数据类型：" + wrapper.getData().getContent());
+        }
     }
 }
 ```
@@ -286,7 +445,7 @@ public class TestSectionAdapter extends RcvSectionAdapter<TestSection,TestData>
 
 **9.悬浮标签StickyLayout**
 
-适配器方面无需改动，直接使用``RcvSectionAdapter``即可，在RecyclerView同级布局下添加``RcvStickyLayout``，然后在代码中关联起来即可：
+适配器方面无需改动，直接使用``RcvSectionSingleLabelAdapter``即可，在RecyclerView同级布局下添加``RcvStickyLayout``，然后在代码中关联起来即可：
 
 ```
     // xml布局中添加RcvStickyLayout：

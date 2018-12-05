@@ -9,6 +9,7 @@ package com.lwksample.rcvadapter;
 public class TestData
 {
     private String content;
+    private int type;
 
     public TestData(String content)
     {
@@ -25,11 +26,22 @@ public class TestData
         this.content = content;
     }
 
+    public int getType()
+    {
+        return type;
+    }
+
+    public void setType(int type)
+    {
+        this.type = type;
+    }
+
     @Override
     public String toString()
     {
         return "TestData{" +
                 "content='" + content + '\'' +
+                ", type=" + type +
                 '}';
     }
 }

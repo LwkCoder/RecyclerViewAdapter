@@ -3,10 +3,6 @@ package com.lwksample.rcvadapter.refresh;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.lwkandroid.rcvadapter.RcvSingleAdapter;
 import com.lwkandroid.rcvadapter.holder.RcvHolder;
@@ -16,6 +12,11 @@ import com.lwkandroid.rcvadapter.utils.RcvLinearDecoration;
 import com.lwksample.rcvadapter.R;
 
 import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class RefreshActivity extends AppCompatActivity implements
         SwipeRefreshLayout.OnRefreshListener,

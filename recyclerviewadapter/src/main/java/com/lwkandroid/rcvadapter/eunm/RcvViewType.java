@@ -6,7 +6,7 @@ package com.lwkandroid.rcvadapter.eunm;
  * 2017/4/27
  */
 
-public class RcvViewType
+public final class RcvViewType
 {
     //HeaderView的ViewType基础标识
     public static final int HEADER = 1000000;

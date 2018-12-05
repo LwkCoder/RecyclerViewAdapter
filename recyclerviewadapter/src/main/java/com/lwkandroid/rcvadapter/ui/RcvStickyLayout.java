@@ -2,15 +2,14 @@ package com.lwkandroid.rcvadapter.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.lwkandroid.rcvadapter.RcvSectionAdapter;
+import com.lwkandroid.rcvadapter.RcvSectionSingleLabelAdapter;
 import com.lwkandroid.rcvadapter.bean.RcvSectionWrapper;
-import com.lwkandroid.rcvadapter.eunm.RcvViewType;
 import com.lwkandroid.rcvadapter.holder.RcvHolder;
+import com.lwkandroid.rcvadapter.utils.RcvUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +37,7 @@ public class RcvStickyLayout extends FrameLayout
     protected RecyclerView.LayoutManager mLayoutManager;
     protected RcvHolder mHolder;
     protected int mStickyHeight = RecyclerView.NO_POSITION;
-    protected RcvSectionAdapter mAdapter;
+    protected RcvSectionSingleLabelAdapter mAdapter;
     protected int mFirstStickyPosition = RecyclerView.NO_POSITION;
     protected int mCurrentIndicatePosition = RecyclerView.NO_POSITION;
     protected List<Integer> mStickyPositionList = new LinkedList<>();
@@ -70,7 +69,7 @@ public class RcvStickyLayout extends FrameLayout
     {
         if (recyclerView == null)
         {
-            Log.e(TAG, "You must attach a recyclerView");
+            RcvUtils.doErrorLog(TAG, "You must attach a recyclerView");
             return;
         }
 
@@ -79,12 +78,12 @@ public class RcvStickyLayout extends FrameLayout
 
         //检查适配器
         RecyclerView.Adapter adapter = recyclerView.getAdapter();
-        if (!(adapter instanceof RcvSectionAdapter))
+        if (!(adapter instanceof RcvSectionSingleLabelAdapter))
         {
-            Log.e(TAG, "You must set the RcvSectionAdapter with RecyclerView");
+            RcvUtils.doErrorLog(TAG, "You must set the RcvSectionSingleLabelAdapter with RecyclerView");
             return;
         }
-        this.mAdapter = (RcvSectionAdapter) recyclerView.getAdapter();
+        this.mAdapter = (RcvSectionSingleLabelAdapter) recyclerView.getAdapter();
         resetParams();
         mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver()
         {
@@ -137,7 +136,7 @@ public class RcvStickyLayout extends FrameLayout
             }
         });
         //初始化悬浮布局
-        mHolder = RcvHolder.get(getContext(), this, mAdapter.getSectionLayoutId());
+        mHolder = RcvHolder.get(getContext(), this, mAdapter.getSectionLabelLayoutId());
         mHolder.getConvertView().setOnClickListener(new OnClickListener()
         {
             @Override
@@ -187,7 +186,6 @@ public class RcvStickyLayout extends FrameLayout
             firstCompleteVisibleP = ((StaggeredGridLayoutManager) mLayoutManager).findFirstCompletelyVisibleItemPositions(null)[0];
         }
 
-        Log.e("sss", "fP=" + firstVisibleP + " fCP=" + firstCompleteVisibleP + " fSP=" + mFirstStickyPosition);
         //需要隐藏悬浮布局的时机
         if (mFirstStickyPosition == RecyclerView.NO_POSITION || firstVisibleP == RecyclerView.NO_POSITION
                 || firstVisibleP < mFirstStickyPosition)
@@ -201,7 +199,7 @@ public class RcvStickyLayout extends FrameLayout
         if (firstCompleteVisibleP == RecyclerView.NO_POSITION && firstVisibleP >= mFirstStickyPosition)
             firstCompleteVisibleP = firstVisibleP;
         //两个Section相顶效果
-        if (mAdapter.getItemViewType(firstCompleteVisibleP) == RcvViewType.SECTION_LABEL)
+        if (mAdapter.isSectionLabelViewType(mAdapter.getItemViewType(firstCompleteVisibleP)))
         {
             int top = mLayoutManager.findViewByPosition(firstCompleteVisibleP).getTop();
             if (top >= 0 && top < mStickyHeight)
@@ -216,18 +214,18 @@ public class RcvStickyLayout extends FrameLayout
         if (scrollState == RecyclerView.SCROLL_STATE_IDLE || scrollState == RecyclerView.SCROLL_STATE_DRAGGING)
         {
             //停止或者手触摸拉动的情况
-            updateStickyLayout(getLastSectionPostion(firstVisibleP));
+            updateStickyLayout(getLastSectionPosition(firstVisibleP));
         } else
         {
             //惯性滑动的情况
             if (firstVisibleP < mAdapterItemCount && firstCompleteVisibleP < mAdapterItemCount)
             {
                 if (firstVisibleP > mCurrentIndicatePosition && firstVisibleP != RecyclerView.NO_POSITION
-                        && mAdapter.getItemViewType(firstVisibleP) == RcvViewType.SECTION_LABEL)
+                        && mAdapter.isSectionLabelViewType(mAdapter.getItemViewType(firstVisibleP)))
                     updateStickyLayout(firstVisibleP);
 
                 else if (firstVisibleP < mCurrentIndicatePosition && firstCompleteVisibleP != RecyclerView.NO_POSITION
-                        && mAdapter.getItemViewType(firstCompleteVisibleP) == RcvViewType.SECTION_LABEL)
+                        && mAdapter.isSectionLabelViewType(mAdapter.getItemViewType(firstCompleteVisibleP)))
                     updateStickyLayout(getLastStickyPosition(mCurrentIndicatePosition));
             }
         }
@@ -240,7 +238,7 @@ public class RcvStickyLayout extends FrameLayout
             return;
 
         RcvSectionWrapper wrapper = (RcvSectionWrapper) mAdapter.getDatas().get(position - mAdapter.getHeadCounts());
-        mAdapter.onBindSectionView(mHolder, wrapper.getSection(), position);
+        mAdapter.onBindSectionLabelView(mHolder, wrapper.getSection(), position);
         mCurrentIndicatePosition = position;
     }
 
@@ -288,8 +286,8 @@ public class RcvStickyLayout extends FrameLayout
         return resultP;
     }
 
-    //获取任意位置的前一个Sectiond位置
-    private int getLastSectionPostion(int position)
+    //获取任意位置的前一个Section的位置
+    private int getLastSectionPosition(int position)
     {
         List<Integer> list = new ArrayList<>();
         list.addAll(mStickyPositionList);
@@ -325,5 +323,6 @@ public class RcvStickyLayout extends FrameLayout
     {
         void onClicked(View stickyLayout);
     }
+
 
 }

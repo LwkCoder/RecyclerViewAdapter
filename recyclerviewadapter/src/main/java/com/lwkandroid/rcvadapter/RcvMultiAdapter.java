@@ -1,7 +1,6 @@
 package com.lwkandroid.rcvadapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +16,14 @@ import com.lwkandroid.rcvadapter.listener.RcvLoadMoreListener;
 import com.lwkandroid.rcvadapter.manager.RcvItemViewManager;
 import com.lwkandroid.rcvadapter.ui.RcvDefLoadMoreView;
 import com.lwkandroid.rcvadapter.utils.RcvAlphaInAnim;
+import com.lwkandroid.rcvadapter.utils.RcvUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -187,54 +188,6 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     }
 
     /**
-     * 请使用setLoadMoreLayout(RcvBaseLoadMoreView view)、disableLoadMore()、enableLoadMore(RcvLoadMoreListener listener)
-     * 是否开启加载更多功能【使用默认布局】
-     *
-     * @param enable 是否开启该功能
-     */
-    @Deprecated
-    public void enableLoadMore(boolean enable)
-    {
-        enableLoadMore(enable, null);
-    }
-
-    /**
-     * 请使用setLoadMoreLayout(RcvBaseLoadMoreView view)、disableLoadMore()、enableLoadMore(RcvLoadMoreListener listener)
-     * 是否开启加载更多功能【使用默认布局】
-     *
-     * @param enable   是否开启该功能
-     * @param listener 加载更多监听
-     */
-    @Deprecated
-    public void enableLoadMore(boolean enable, RcvLoadMoreListener listener)
-    {
-        enableLoadMore(enable, new RcvDefLoadMoreView.Builder().build(mContext), listener);
-    }
-
-    /**
-     * 请使用setLoadMoreLayout(RcvBaseLoadMoreView view)、disableLoadMore()、enableLoadMore(RcvLoadMoreListener listener)
-     * 是否开启加载更多功能
-     *
-     * @param enable   是否开启该功能
-     * @param layout   自定义加载更多布局
-     * @param listener 加载更多监听
-     */
-    @Deprecated
-    public void enableLoadMore(boolean enable, RcvBaseLoadMoreView layout, RcvLoadMoreListener listener)
-    {
-        if (enable)
-        {
-            this.mLoadMoreLayout = layout;
-            mLoadMoreLayout.handleLoadInit();
-            mLoadMoreLayout.setOnLoadMoreListener(listener);
-        } else
-        {
-            this.mLoadMoreLayout = null;
-        }
-        notifyDataSetChanged();
-    }
-
-    /**
      * 设置加载更多布局
      * 【设置后不可更改】
      *
@@ -267,10 +220,8 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         if (isLoadMoreEnable())
             return;
         if (mLoadMoreLayout == null)
-        {
-            Log.e(TAG, "LoadMoreLayout can't be empty before enableLoadMore() called!!!");
-            return;
-        }
+            setLoadMoreLayout(new RcvDefLoadMoreView(getContext()));
+
         mLoadMoreLayout.handleLoadInit();
         mLoadMoreLayout.setOnLoadMoreListener(listener);
         mIsLoadMoreEnable = true;
@@ -822,7 +773,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
             }, 500);
         } else
         {
-            Log.e(TAG, "Can't invoke notifyLoadMoreSuccess() before you called enableLoadMore()");
+            RcvUtils.doErrorLog(TAG, "Can't invoke notifyLoadMoreSuccess() before you called enableLoadMore()");
         }
     }
 
@@ -839,7 +790,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
             }
         } else
         {
-            Log.e(TAG, "Can't invoke notifyLoadMoreFail() before you called enableLoadMore()");
+            RcvUtils.doErrorLog(TAG, "Can't invoke notifyLoadMoreFail() before you called enableLoadMore()");
         }
     }
 
@@ -856,7 +807,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
             }
         } else
         {
-            Log.e(TAG, "Can't invoke notifyLoadMoreHasNoMoreData() before you called enableLoadMore()");
+            RcvUtils.doErrorLog(TAG, "Can't invoke notifyLoadMoreHasNoMoreData() before you called enableLoadMore()");
         }
     }
 
@@ -876,5 +827,14 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         if (mChildListenerMap == null)
             mChildListenerMap = new HashMap<>();
         mChildListenerMap.put(viewId, listener);
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull RcvHolder holder)
+    {
+        super.onViewDetachedFromWindow(holder);
+        if (mChildListenerMap != null)
+            mChildListenerMap.clear();
+        mChildListenerMap = null;
     }
 }
