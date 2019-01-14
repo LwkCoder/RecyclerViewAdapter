@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -63,6 +65,8 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     protected int mEmptyViewPosition = -1;
     //存储点击事件的map
     protected HashMap<Integer, OnChildClickListener<T>> mChildListenerMap;
+    //配合加载使用的锁
+    private final Lock mLoadMoreLock = new ReentrantLock();
 
     public RcvMultiAdapter(Context context, List<T> datas)
     {
@@ -367,8 +371,9 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
                         @Override
                         public void onClick(View v)
                         {
-                            mChildListenerMap.get(viewId)
-                                    .onChildClicked(viewId, v, t, holder.getLayoutPosition());
+                            OnChildClickListener<T> listener = mChildListenerMap.get(viewId);
+                            if (listener != null)
+                                listener.onChildClicked(viewId, v, t, holder.getLayoutPosition());
                         }
                     });
                 }
@@ -743,10 +748,12 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     {
         if (isLoadMoreEnable())
         {
-            synchronized (mLoadMoreLayout)
-            {
-                mLoadMoreLayout.handleLoadSuccess();
-            }
+            mLoadMoreLock.lock();
+            mLoadMoreLayout.handleLoadSuccess();
+            //            synchronized (mLoadMoreLayout)
+            //            {
+            //                mLoadMoreLayout.handleLoadSuccess();
+            //            }
             //延迟刷新UI,让用户看见加载结果
             mLoadMoreLayout.postDelayed(new Runnable()
             {
@@ -760,6 +767,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
                         mDataList.addAll(newDataList);
                         notifyItemRangeInserted(posStart, newDataList.size());
                     }
+                    mLoadMoreLock.unlock();
                     //刷新UI
                     //因为延迟加载，有可能导致LoadMoreView已经为空，需要判断
                     if (mLoadMoreLayout != null)
@@ -767,10 +775,10 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
                         if (hasMoreData)
                             mLoadMoreLayout.handleLoadInit();
                         else
-                            mLoadMoreLayout.handleNoMoreData();
+                            notifyLoadMoreHasNoMoreData();
                     }
                 }
-            }, 500);
+            }, 200);
         } else
         {
             RcvUtils.doErrorLog(TAG, "Can't invoke notifyLoadMoreSuccess() before you called enableLoadMore()");
@@ -784,10 +792,13 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     {
         if (isLoadMoreEnable())
         {
-            synchronized (mLoadMoreLayout)
-            {
-                mLoadMoreLayout.handleLoadFail();
-            }
+            mLoadMoreLock.lock();
+            mLoadMoreLayout.handleLoadFail();
+            mLoadMoreLock.unlock();
+            //            synchronized (mLoadMoreLayout)
+            //            {
+            //                mLoadMoreLayout.handleLoadFail();
+            //            }
         } else
         {
             RcvUtils.doErrorLog(TAG, "Can't invoke notifyLoadMoreFail() before you called enableLoadMore()");
@@ -801,10 +812,13 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     {
         if (isLoadMoreEnable())
         {
-            synchronized (mLoadMoreLayout)
-            {
-                mLoadMoreLayout.handleNoMoreData();
-            }
+            mLoadMoreLock.lock();
+            mLoadMoreLayout.handleNoMoreData();
+            mLoadMoreLock.unlock();
+            //            synchronized (mLoadMoreLayout)
+            //            {
+            //                mLoadMoreLayout.handleNoMoreData();
+            //            }
         } else
         {
             RcvUtils.doErrorLog(TAG, "Can't invoke notifyLoadMoreHasNoMoreData() before you called enableLoadMore()");
