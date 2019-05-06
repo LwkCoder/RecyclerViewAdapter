@@ -7,11 +7,12 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.view.View;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
 
 /**
  * Function:RecyclerView的分割线【适用于LinearLayoutMananger】
@@ -81,9 +82,12 @@ public class RcvLinearDecoration extends RecyclerView.ItemDecoration
         mDividerDrawable = a.getDrawable(0);
         a.recycle();
         if (orientation == LinearLayoutManager.VERTICAL)
+        {
             mDividerSize = mDividerDrawable.getIntrinsicHeight();
-        else
+        } else
+        {
             mDividerSize = mDividerDrawable.getIntrinsicWidth();
+        }
     }
 
     /**
@@ -98,9 +102,12 @@ public class RcvLinearDecoration extends RecyclerView.ItemDecoration
         setOrientation(orientation);
         mDividerDrawable = drawable;
         if (orientation == LinearLayoutManager.VERTICAL)
+        {
             mDividerSize = mDividerDrawable.getIntrinsicHeight();
-        else
+        } else
+        {
             mDividerSize = mDividerDrawable.getIntrinsicWidth();
+        }
     }
 
     /**
@@ -114,14 +121,20 @@ public class RcvLinearDecoration extends RecyclerView.ItemDecoration
     {
         setOrientation(orientation);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
             mDividerDrawable = context.getResources().getDrawable(drawableResId, null);
-        else
+        } else
+        {
             mDividerDrawable = context.getResources().getDrawable(drawableResId);
+        }
 
         if (orientation == LinearLayoutManager.VERTICAL)
+        {
             mDividerSize = mDividerDrawable.getIntrinsicHeight();
-        else
+        } else
+        {
             mDividerSize = mDividerDrawable.getIntrinsicWidth();
+        }
     }
 
     /**
@@ -155,7 +168,9 @@ public class RcvLinearDecoration extends RecyclerView.ItemDecoration
     private void setOrientation(int orientation)
     {
         if (orientation != LinearLayoutManager.VERTICAL && orientation != LinearLayoutManager.HORIZONTAL)
+        {
             throw new IllegalArgumentException("RcvLinearDecoration orientation must be LinearLayoutManager.VERTICAL or LinearLayoutManager.HORIZONTAL !!!");
+        }
         mOrientation = orientation;
     }
 
@@ -163,9 +178,12 @@ public class RcvLinearDecoration extends RecyclerView.ItemDecoration
     public void onDraw(Canvas c, RecyclerView parent)
     {
         if (mOrientation == LinearLayoutManager.VERTICAL)
+        {
             drawVertical(c, parent);
-        else
+        } else
+        {
             drawHorizontal(c, parent);
+        }
     }
 
     //绘制垂直排列分割线
@@ -220,8 +238,11 @@ public class RcvLinearDecoration extends RecyclerView.ItemDecoration
     {
         super.getItemOffsets(outRect, view, parent, state);
         if (mOrientation == LinearLayoutManager.VERTICAL)
+        {
             outRect.set(0, 0, 0, mDividerSize);
-        else
+        } else
+        {
             outRect.set(0, 0, mDividerSize, 0);
+        }
     }
 }

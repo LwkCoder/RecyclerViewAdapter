@@ -18,7 +18,7 @@ public abstract class RcvSingleAdapter<T> extends RcvMultiAdapter<T>
     {
         super(context, datas);
         this.mLayoutId = layoutId;
-        addItemView(new RcvBaseItemView<T>()
+        addItemView(new RcvBaseItemView<T>(this)
         {
             @Override
             public int getItemViewLayoutId()

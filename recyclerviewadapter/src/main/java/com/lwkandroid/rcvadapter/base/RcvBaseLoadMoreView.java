@@ -55,7 +55,9 @@ public abstract class RcvBaseLoadMoreView extends RelativeLayout
         setWillNotDraw(false);
         int layoutId = setContentViewId();
         if (layoutId == 0)
+        {
             throw new IllegalArgumentException("RcvLoadMoreBaseView: Must set content layout!");
+        }
         mLayoutContent = inflate(context, layoutId, this);
         initUI();
         changeStatus(STATUS_INIT);
@@ -125,10 +127,14 @@ public abstract class RcvBaseLoadMoreView extends RelativeLayout
         else if (status == STATUS_LOADING)
         {
             if (mCurStatus == STATUS_NOMOREDATA || mCurStatus == STATUS_LOADING)
+            {
                 return;
+            }
             setLoadingUI();
             if (mListener != null)
+            {
                 mListener.onLoadMoreRequest();
+            }
             mLayoutContent.setOnClickListener(null);
         }
         //加载成功

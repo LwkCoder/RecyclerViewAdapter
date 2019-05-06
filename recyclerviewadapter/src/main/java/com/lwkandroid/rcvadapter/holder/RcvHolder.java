@@ -3,11 +3,6 @@ package com.lwkandroid.rcvadapter.holder;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.StringRes;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.util.Linkify;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -17,6 +12,12 @@ import android.widget.Button;
 import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Function:RecycleView通用ViewHolder
@@ -65,7 +66,9 @@ public class RcvHolder extends RecyclerView.ViewHolder
     public <T extends View> T findView(int viewId)
     {
         if (mViews == null)
+        {
             mViews = new SparseArray<>();
+        }
 
         View view = mViews.get(viewId);
         if (view == null)
@@ -83,7 +86,9 @@ public class RcvHolder extends RecyclerView.ViewHolder
     {
         View view = findView(viewId);
         if (view != null)
+        {
             view.setVisibility(visibility);
+        }
         return this;
     }
 

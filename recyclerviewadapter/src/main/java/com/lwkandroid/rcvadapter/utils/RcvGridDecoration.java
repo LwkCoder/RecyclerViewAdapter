@@ -7,12 +7,13 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.view.View;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import android.view.View;
 
 /**
  * Function:RecyclerView的分割线【适用于GridLayoutMananger和StaggeredGridLayoutManager】
@@ -87,9 +88,12 @@ public class RcvGridDecoration extends RecyclerView.ItemDecoration
     public RcvGridDecoration(Context context, @DrawableRes int drawableResId)
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
             mDividerDrawable = context.getResources().getDrawable(drawableResId, null);
-        else
+        } else
+        {
             mDividerDrawable = context.getResources().getDrawable(drawableResId);
+        }
         mDividerHeight = mDividerDrawable.getIntrinsicHeight();
         mDividerWidth = mDividerDrawable.getIntrinsicWidth();
     }
@@ -133,9 +137,12 @@ public class RcvGridDecoration extends RecyclerView.ItemDecoration
         int spanCount = -1;
         RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
         if (layoutManager instanceof GridLayoutManager)
+        {
             spanCount = ((GridLayoutManager) layoutManager).getSpanCount();
-        else if (layoutManager instanceof StaggeredGridLayoutManager)
+        } else if (layoutManager instanceof StaggeredGridLayoutManager)
+        {
             spanCount = ((StaggeredGridLayoutManager) layoutManager).getSpanCount();
+        }
         return spanCount;
     }
 
@@ -248,11 +255,17 @@ public class RcvGridDecoration extends RecyclerView.ItemDecoration
     {
         int spanCount = getSpanCount(parent);
         int childCount = parent.getAdapter().getItemCount();
-        if (isLastRaw(parent, itemPosition, spanCount, childCount))// 如果是最后一行，则不需要绘制底部
+        if (isLastRaw(parent, itemPosition, spanCount, childCount))
+        {
+            // 如果是最后一行，则不需要绘制底部
             outRect.set(0, 0, mDividerWidth, 0);
-        else if (isLastColum(parent, itemPosition, spanCount, childCount))// 如果是最后一列，则不需要绘制右边
+        } else if (isLastColum(parent, itemPosition, spanCount, childCount))
+        {
+            // 如果是最后一列，则不需要绘制右边
             outRect.set(0, 0, 0, mDividerHeight);
-        else
+        } else
+        {
             outRect.set(0, 0, mDividerWidth, mDividerHeight);
+        }
     }
 }

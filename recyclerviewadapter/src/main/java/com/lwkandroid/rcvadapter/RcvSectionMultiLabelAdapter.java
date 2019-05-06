@@ -33,19 +33,23 @@ public abstract class RcvSectionMultiLabelAdapter<S, D> extends RcvMultiAdapter<
 
         //添加所有标签类型
         if (labelItemViews != null && labelItemViews.length > 0)
+        {
             for (int i = 0, length = labelItemViews.length; i < length; i++)
             {
                 int viewType = RcvViewType.SECTION_LABEL - i;
                 addItemView(viewType, labelItemViews[i]);
                 mLabelViewTypesSet.add(viewType);
             }
+        }
 
         //添加所有数据类型
         if (dataItemViews != null && dataItemViews.length > 0)
+        {
             for (RcvBaseItemView<RcvSectionWrapper<S, D>> dataItemView : dataItemViews)
             {
                 addItemView(dataItemView);
             }
+        }
     }
 
     /**

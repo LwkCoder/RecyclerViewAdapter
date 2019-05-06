@@ -9,7 +9,7 @@ import com.lwkandroid.rcvadapter.holder.RcvHolder;
  */
 public abstract class RcvBaseItemView<T>
 {
-    protected RcvMultiAdapter<T> mAdapter;
+    private RcvMultiAdapter<T> mAdapter;
 
     public RcvBaseItemView()
     {

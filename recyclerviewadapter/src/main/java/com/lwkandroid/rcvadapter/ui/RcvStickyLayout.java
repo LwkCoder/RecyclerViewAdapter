@@ -143,7 +143,9 @@ public class RcvStickyLayout extends FrameLayout
             public void onClick(View v)
             {
                 if (mLayoutClickedListener != null)
+                {
                     mLayoutClickedListener.onClicked(v);
+                }
             }
         });
         addView(mHolder.getConvertView(), 0);
@@ -197,15 +199,20 @@ public class RcvStickyLayout extends FrameLayout
         setVisibility(VISIBLE);
 
         if (firstCompleteVisibleP == RecyclerView.NO_POSITION && firstVisibleP >= mFirstStickyPosition)
+        {
             firstCompleteVisibleP = firstVisibleP;
+        }
         //两个Section相顶效果
         if (mAdapter.isSectionLabelViewType(mAdapter.getItemViewType(firstCompleteVisibleP)))
         {
             int top = mLayoutManager.findViewByPosition(firstCompleteVisibleP).getTop();
             if (top >= 0 && top < mStickyHeight)
+            {
                 setY(top - mStickyHeight);
-            else
+            } else
+            {
                 setY(0);
+            }
         } else
         {
             setY(0);
@@ -222,11 +229,13 @@ public class RcvStickyLayout extends FrameLayout
             {
                 if (firstVisibleP > mCurrentIndicatePosition && firstVisibleP != RecyclerView.NO_POSITION
                         && mAdapter.isSectionLabelViewType(mAdapter.getItemViewType(firstVisibleP)))
+                {
                     updateStickyLayout(firstVisibleP);
-
-                else if (firstVisibleP < mCurrentIndicatePosition && firstCompleteVisibleP != RecyclerView.NO_POSITION
+                } else if (firstVisibleP < mCurrentIndicatePosition && firstCompleteVisibleP != RecyclerView.NO_POSITION
                         && mAdapter.isSectionLabelViewType(mAdapter.getItemViewType(firstCompleteVisibleP)))
+                {
                     updateStickyLayout(getLastStickyPosition(mCurrentIndicatePosition));
+                }
             }
         }
     }
@@ -235,7 +244,9 @@ public class RcvStickyLayout extends FrameLayout
     private void updateStickyLayout(int position)
     {
         if (position == RecyclerView.NO_POSITION)
+        {
             return;
+        }
 
         RcvSectionWrapper wrapper = (RcvSectionWrapper) mAdapter.getDatas().get(position - mAdapter.getHeadCounts());
         mAdapter.onBindSectionLabelView(mHolder, wrapper.getSection(), position);
@@ -247,7 +258,9 @@ public class RcvStickyLayout extends FrameLayout
     {
         super.onLayout(changed, left, top, right, bottom);
         if (mHolder != null)
+        {
             mStickyHeight = mHolder.getConvertView().getHeight();
+        }
     }
 
     //重置各参数
@@ -262,26 +275,35 @@ public class RcvStickyLayout extends FrameLayout
             for (int i = 0, count = mAdapter.getDataSize(); i < count; i++)
             {
                 if (((RcvSectionWrapper) mAdapter.getDatas().get(i)).isSection())
+                {
                     mStickyPositionList.add(i + mAdapter.getHeadCounts());
+                }
             }
         }
 
         if (mStickyPositionList.size() > 0)
+        {
             mFirstStickyPosition = mStickyPositionList.get(0);
-        else
+        } else
+        {
             mFirstStickyPosition = RecyclerView.NO_POSITION;
+        }
     }
 
     //获取某一个Section的上一个Section的位置
     private int getLastStickyPosition(int startP)
     {
         if (mStickyPositionList == null || mStickyPositionList.size() == 0)
+        {
             return RecyclerView.NO_POSITION;
+        }
 
         int resultP = RecyclerView.NO_POSITION;
         int startIndex = mStickyPositionList.indexOf(startP);
         if (startIndex != RecyclerView.NO_POSITION && --startIndex >= 0)
+        {
             resultP = mStickyPositionList.get(startIndex);
+        }
 
         return resultP;
     }
@@ -295,7 +317,9 @@ public class RcvStickyLayout extends FrameLayout
         for (Integer p : list)
         {
             if (p <= position)
+            {
                 return p;
+            }
         }
         return RecyclerView.NO_POSITION;
     }

@@ -15,6 +15,8 @@ public class RcvUtils
     public static void doErrorLog(String tag, String log)
     {
         if (DEBUG)
+        {
             Log.e(tag, log);
+        }
     }
 }

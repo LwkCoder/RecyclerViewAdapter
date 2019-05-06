@@ -72,7 +72,9 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     {
         this.mContext = context;
         if (datas != null && datas.size() > 0)
+        {
             this.mDataList.addAll(datas);
+        }
         mItemViewManager = new RcvItemViewManager();
     }
 
@@ -115,7 +117,9 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     public void addHeaderView(View... headerViews)
     {
         if (mHeaderViews == null)
+        {
             mHeaderViews = new SparseArray<>();
+        }
         for (View headerView : headerViews)
         {
             mHeaderViews.put(RcvViewType.HEADER + getHeadCounts(), headerView);
@@ -157,7 +161,9 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     public void addFooterView(View... footViews)
     {
         if (mFooterViews == null)
+        {
             mFooterViews = new SparseArray<>();
+        }
         for (View footView : footViews)
         {
             mFooterViews.put(RcvViewType.FOOTER + getFootCounts(), footView);
@@ -222,9 +228,13 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     public void enableLoadMore(RcvLoadMoreListener listener)
     {
         if (isLoadMoreEnable())
+        {
             return;
+        }
         if (mLoadMoreLayout == null)
+        {
             setLoadMoreLayout(new RcvDefLoadMoreView(getContext()));
+        }
 
         mLoadMoreLayout.handleLoadInit();
         mLoadMoreLayout.setOnLoadMoreListener(listener);
@@ -293,15 +303,18 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     public void enableItemShowingAnim(boolean enable, RcvBaseAnimation animation)
     {
         if (enable)
+        {
             this.mAnimation = animation;
-        else
+        } else
+        {
             this.mAnimation = null;
+        }
     }
 
     //子item展示动画是否开启
     protected boolean isItemAnimEnable()
     {
-        return mAnimation != null ? true : false;
+        return mAnimation != null;
     }
 
     @Override
@@ -359,9 +372,10 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         {
             //设置数据
             T data = queryDataInPosition(position);
-            onBindView(holder, data, position);
+            doBindView(holder, data, position);
             //回调子View点击监听
             if (mChildListenerMap != null)
+            {
                 for (Map.Entry<Integer, OnChildClickListener<T>> entry : mChildListenerMap.entrySet())
                 {
                     final int viewId = entry.getKey();
@@ -373,17 +387,20 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
                         {
                             OnChildClickListener<T> listener = mChildListenerMap.get(viewId);
                             if (listener != null)
+                            {
                                 listener.onChildClicked(viewId, v, t, holder.getLayoutPosition());
+                            }
                         }
                     });
                 }
+            }
             //设置动画
             startItemAnim(holder, position);
         }
     }
 
     //最终执行绑定数据操作的方法
-    protected void onBindView(final RcvHolder holder, T data, int position)
+    protected void doBindView(final RcvHolder holder, T data, int position)
     {
         mItemViewManager.bindView(holder, data, position);
     }
@@ -408,7 +425,9 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         {
             return mItemViewManager.getItemViewType(queryDataInPosition(position), position);
         } else
+        {
             return super.getItemViewType(position);
+        }
     }
 
     //启动子item展示动画
@@ -571,9 +590,12 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
                             || isInFootViewPos(position)
                             || isInLoadMorePos(position)
                             || isInEmptyStatus())
+                    {
                         return gridManager.getSpanCount();
-                    else
+                    } else
+                    {
                         return 1;
+                    }
                 }
             });
             gridManager.setSpanCount(gridManager.getSpanCount());
@@ -612,7 +634,9 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         mAnimLastPosition = -1;
 
         if (data != null && data.size() > 0)
+        {
             mDataList.addAll(data);
+        }
         notifyDataSetChanged();
     }
 
@@ -638,7 +662,9 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         if (t != null)
         {
             if (isInEmptyStatus())
+            {
                 notifyItemRemoved(mEmptyViewPosition);
+            }
             mDataList.add(position - getHeadCounts(), t);
             notifyItemInserted(position);
             return position;
@@ -656,7 +682,9 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         if (data != null && data.size() > 0)
         {
             if (isInEmptyStatus())
+            {
                 notifyItemRemoved(mEmptyViewPosition);
+            }
             int posStart = getHeadCounts() + getDataSize();
             mDataList.addAll(data);
             notifyItemRangeInserted(posStart, data.size());
@@ -721,7 +749,9 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         T data = null;
         int realIndex = position - getHeadCounts();
         if (realIndex < mDataList.size())
+        {
             data = mDataList.get(realIndex);
+        }
         return data;
     }
 
@@ -773,9 +803,12 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
                     if (mLoadMoreLayout != null)
                     {
                         if (hasMoreData)
+                        {
                             mLoadMoreLayout.handleLoadInit();
-                        else
+                        } else
+                        {
                             notifyLoadMoreHasNoMoreData();
+                        }
                     }
                 }
             }, 200);
@@ -839,7 +872,9 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     public void setOnChildClickListener(int viewId, OnChildClickListener<T> listener)
     {
         if (mChildListenerMap == null)
+        {
             mChildListenerMap = new HashMap<>();
+        }
         mChildListenerMap.put(viewId, listener);
     }
 
@@ -848,7 +883,9 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     {
         super.onViewDetachedFromWindow(holder);
         if (mChildListenerMap != null)
+        {
             mChildListenerMap.clear();
+        }
         mChildListenerMap = null;
     }
 }

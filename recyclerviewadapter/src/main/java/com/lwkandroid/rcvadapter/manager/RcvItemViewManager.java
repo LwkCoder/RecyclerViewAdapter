@@ -70,7 +70,9 @@ public class RcvItemViewManager<T>
 
         int indexToRemove = mAllItemViews.indexOfValue(itemView);
         if (indexToRemove >= 0)
+        {
             mAllItemViews.removeAt(indexToRemove);
+        }
         return this;
     }
 
@@ -84,7 +86,9 @@ public class RcvItemViewManager<T>
         int indexToRemove = mAllItemViews.indexOfKey(itemType);
 
         if (indexToRemove >= 0)
+        {
             mAllItemViews.removeAt(indexToRemove);
+        }
         return this;
     }
 
@@ -126,7 +130,9 @@ public class RcvItemViewManager<T>
         {
             RcvBaseItemView<T> itemView = mAllItemViews.valueAt(i);
             if (itemView.isForViewType(item, position))
+            {
                 return mAllItemViews.keyAt(i);
+            }
         }
         throw new IllegalArgumentException("No ItemView added that matches position=" + position + " in data source");
     }
@@ -168,7 +174,9 @@ public class RcvItemViewManager<T>
         {
             RcvBaseItemView<T> itemView = mAllItemViews.valueAt(i);
             if (itemView.isForViewType(item, position))
+            {
                 return itemView.getItemViewLayoutId();
+            }
         }
         throw new IllegalArgumentException("No ItemView added that matches position=" + position + " in data source");
     }
