@@ -1,0 +1,82 @@
+apply plugin: rootProject.ext.plugins.maven
+apply plugin: rootProject.ext.plugins.bintray
+
+version = rootProject.ext.bintray.version
+
+def siteUrl = rootProject.ext.bintray.siteUrl
+def gitUrl = rootProject.ext.bintray.gitUrl
+
+group = rootProject.ext.bintray.group
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging rootProject.ext.bintray.packaging
+                name rootProject.ext.bintray.libName
+                description rootProject.ext.bintray.description
+                url siteUrl
+                licenses {
+                    license {
+                        name rootProject.ext.bintray.licenseName
+                        url rootProject.ext.bintray.licenseUrl
+                    }
+                }
+                developers {
+                    developer {
+                        id rootProject.ext.bintray.developerId
+                        name rootProject.ext.bintray.developerName
+                        email rootProject.ext.bintray.developerEmail
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+if (project.hasProperty("android")) {
+    task sourcesJar(type: Jar) {
+        from android.sourceSets.main.java.srcDirs
+        classifier = 'sources'
+    }
+    task javadoc(type: Javadoc) {
+        source = android.sourceSets.main.java.srcDirs
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+        failOnError false
+    }
+} else {
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        from sourceSets.main.allSource
+        classifier = 'sources'
+    }
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+bintray {
+    user = rootProject.ext.bintray.bintrayUser
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = rootProject.ext.bintray.bintrayRepo
+        name = rootProject.ext.bintray.libName
+        userOrg = rootProject.ext.bintray.bintrayUser
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = [rootProject.ext.bintray.bintrayLicense]
+        publish = true
+        publicDownloadNumbers = true
+    }
+}

@@ -1,0 +1,29 @@
+ext {
+    plugins = [
+            maven  : 'com.github.dcendents.android-maven',
+            bintray: 'com.jfrog.bintray'
+    ]
+    bintray = [
+            version       : "1.4.2", // 指定库的版本号
+            group         : "com.lwkandroid", // 库的group名，确定好之后不能修改
+            libName       : 'RecyclerViewAdapter',// 库的名称
+
+            siteUrl       : 'https://github.com/Vanish136/RecyclerViewAdapter', // 项目开源地址
+            gitUrl        : 'https://github.com/Vanish136/RecyclerViewAdapter.git', // 项目git地址
+
+            packaging     : 'aar',
+            description   : 'Library for android', // 项目描述，随意
+
+            licenseName   : 'The Apache Software License, Version 2.0', // 开源协议
+            licenseUrl    : 'http://www.apache.org/licenses/LICENSE-2.0.txt', // 开源协议地址
+
+            developerId   : 'luo', // 开发者id
+            developerName : 'wenkang', // 开发者姓名
+            developerEmail: 'lwk520136@gmail.com', // 开发者邮箱
+
+            bintrayRepo   : "maven", // 发布到自己在bintray的哪个仓库中，一般默认maven
+            bintrayUser   : 'luowenkang', // bintray的用户名
+            bintrayLicense: "Apache-2.0" // 指定bintray上的开源协议
+    ]
+
+}
