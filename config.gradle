@@ -3,6 +3,9 @@ ext {
             maven  : 'com.github.dcendents.android-maven',
             bintray: 'com.jfrog.bintray'
     ]
+    //依次执行：
+    //gradlew clean install
+    //gradle2 bintrayUpload
     bintray = [
             version       : "1.4.2", // 指定库的版本号
             group         : "com.lwkandroid", // 库的group名，确定好之后不能修改
