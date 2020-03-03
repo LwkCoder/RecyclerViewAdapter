@@ -128,25 +128,20 @@ mAdapter.setEmptyView(layoutId);
 
 **4.设置滑动到底部自动加载更多，先上示例代码吧：**
 
-**自1.4.0版本开始删除了之前的调用方式**
+**自1.4.3版本开始删除了之前的调用方式**
 ```
-//先设置加载样式，可继承RcvBaseLoadMoreView实现自定义样式
+//可以先设置加载样式，继承RcvBaseLoadMoreView实现自定义样式
+//不设置的话会使用默认的样式，参考RcvDefLoadMoreView源码
 RcvDefLoadMoreView loadMoreView = new RcvDefLoadMoreView.Builder()
                 .setBgColor(Color.GREEN)
                 .setTextColor(Color.RED)
                 .build(this);
 mAdapter.setLoadMoreLayout(loadMoreView);
 //再开启并设置监听
-mAdapter.enableLoadMore(new RcvLoadMoreListener()
-        {
-            @Override
-            public void onLoadMoreRequest()
-            {
-               //TODO 在这里实现加载更多
-            }
-        });
+mAdapter.enableLoadMore(true);
+mAdapter.setOnLoadMoreListener(RcvLoadMoreListener listener);
 //禁止加载更多,通常用在配合下拉刷新的过程中
-mAdapter.disableLoadMore();
+mAdapter.enableLoadMore(false);
 ```
 **注：** <br />
 ① 默认的样式实现是类`RcvDefLoadMoreView` <br />

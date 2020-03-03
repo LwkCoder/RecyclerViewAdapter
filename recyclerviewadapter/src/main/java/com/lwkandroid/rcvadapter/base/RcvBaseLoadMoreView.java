@@ -15,27 +15,27 @@ public abstract class RcvBaseLoadMoreView extends RelativeLayout
     /**
      * 初始状态：未触发加载时的状态
      */
-    protected final int STATUS_INIT = 0x00000001;
+    public static final int STATUS_INIT = 0x00000001;
 
     /**
      * 加载中的状态
      */
-    protected final int STATUS_LOADING = 0x00000002;
+    public static final int STATUS_LOADING = 0x00000002;
 
     /**
      * 加载成功后的状态
      */
-    protected final int STATUS_SUCCESS = 0x00000003;
+    public static final int STATUS_SUCCESS = 0x00000003;
 
     /**
      * 加载失败后的状态
      */
-    protected final int STATUS_FAIL = 0x00000004;
+    public static final int STATUS_FAIL = 0x00000004;
 
     /**
      * 没有更多数据的状态
      */
-    protected final int STATUS_NOMOREDATA = 0x00000005;
+    public static final int STATUS_NOMOREDATA = 0x00000005;
 
     protected View mLayoutContent;
 
@@ -164,6 +164,14 @@ public abstract class RcvBaseLoadMoreView extends RelativeLayout
 
         //同步标记
         mCurStatus = status;
+    }
+
+    /**
+     * 获取当前状态
+     */
+    public int getCurrentStatus()
+    {
+        return mCurStatus;
     }
 
     /**

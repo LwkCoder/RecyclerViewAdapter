@@ -97,7 +97,8 @@ public class DetailActivity extends AppCompatActivity implements RcvMultiAdapter
         }
         if (loadMore)
         {
-            mAdapter.enableLoadMore(new RcvLoadMoreListener()
+            mAdapter.enableLoadMore(true);
+            mAdapter.setOnLoadMoreListener(new RcvLoadMoreListener()
             {
                 @Override
                 public void onLoadMoreRequest()

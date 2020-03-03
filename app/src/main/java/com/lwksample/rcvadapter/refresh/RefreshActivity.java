@@ -66,7 +66,7 @@ public class RefreshActivity extends AppCompatActivity implements
     public void onRefresh()
     {
         //触发刷新的方法
-        mAdapter.disableLoadMore();
+        mAdapter.enableLoadMore(false);
         mLastPage = mCurrentPage;
         mCurrentPage = 0;
         mPresenter.requestData(true, mCurrentPage, PAGE_SIZE);
@@ -79,13 +79,14 @@ public class RefreshActivity extends AppCompatActivity implements
         //刷新成功后的方法
         mAdapter.refreshDatas(dataList);
         //开启加载更多
-        mAdapter.enableLoadMore(this);
+        mAdapter.enableLoadMore(true);
+        mAdapter.setOnLoadMoreListener(this);
         //如果后续没有更多数据，提示用户
         if (!hasMoreData)
             mAdapter.notifyLoadMoreHasNoMoreData();
         //如果当前页一条数据都没有，直接关闭加载更多功能
         if (dataList == null || dataList.size() == 0)
-            mAdapter.disableLoadMore();
+            mAdapter.enableLoadMore(false);
     }
 
     @Override
