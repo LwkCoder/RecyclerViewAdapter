@@ -10,21 +10,9 @@ CSDN：http://blog.csdn.net/lwk520136/article/details/70787798<br />
 ```
 #last-version请查看上面的最新版本号
 
-#AndroidStudio3.0以下
-//在自己项目里添加RecyclerView的引用
-compile 'com.android.support:recyclerview-v7:your-version'
-//添加该库的引用，并去除自带的RecyclerView引用，防止版本冲突
-compile("com.lwkandroid:recyclerviewadapter:last-version") {
-    exclude(group: 'com.android.support', module: 'recyclerview-v7')
-}
+#只支持AndroidX
+implementation "com.lwkandroid:recyclerviewadapter:last-version"
 
-#AndroidStudio3.0以上
-//在自己项目里添加RecyclerView的引用
-implementation 'com.android.support:recyclerview-v7:your-version'
-//添加该库的引用，并去除自带的RecyclerView引用，防止版本冲突
-implementation("com.lwkandroid:recyclerviewadapter:last-version") {
-    exclude(group: 'com.android.support', module: 'recyclerview-v7')
-}
 ```
 
 ### 基础功能
