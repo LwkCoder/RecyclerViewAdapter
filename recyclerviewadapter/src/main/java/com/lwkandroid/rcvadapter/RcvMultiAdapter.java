@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -404,7 +403,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     }
 
     @Override
-    public void onBindViewHolder(final RcvHolder holder, int position)
+    public void onBindViewHolder(final RcvHolder holder, final int position)
     {
         if (isInHeadViewPos(position) || isInFootViewPos(position) || isInEmptyStatus())
         {
@@ -951,14 +950,15 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
         mChildListenerMap.put(viewId, listener);
     }
 
-    @Override
-    public void onViewDetachedFromWindow(@NonNull RcvHolder holder)
+    /**
+     * 移除子View点击事件
+     */
+    public void removeOnChildClickListener(int viewId)
     {
-        super.onViewDetachedFromWindow(holder);
-        if (mChildListenerMap != null)
+        if (mChildListenerMap == null)
         {
-            mChildListenerMap.clear();
+            return;
         }
-        mChildListenerMap = null;
+        mChildListenerMap.remove(viewId);
     }
 }

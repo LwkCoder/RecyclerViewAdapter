@@ -7,7 +7,7 @@ ext {
     //gradlew clean install
     //gradlew bintrayUpload
     bintray = [
-            version       : "1.4.3", // 指定库的版本号
+            version       : "1.4.4", // 指定库的版本号
             group         : "com.lwkandroid", // 库的group名，确定好之后不能修改
             libName       : 'RecyclerViewAdapter',// 库的名称
 
