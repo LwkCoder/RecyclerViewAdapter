@@ -1,24 +1,30 @@
 package com.lwkandroid.rcvadapter.ui;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.lwkandroid.rcvadapter.R;
 import com.lwkandroid.rcvadapter.base.RcvBaseLoadMoreView;
 
+import androidx.annotation.DimenRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
+
 /**
  * 滑倒底部自动加载更多默认实现View
+ *
+ * @author LWK
  */
 public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
 {
     private View mFlStatus;
-    private ProgressBar mPgbLoading;
     private ImageView mImgStatus;
     private TextView mTvStatus;
+    private RcvLoadingView mLoadingView;
     private Options mOptions;
 
     public RcvDefLoadMoreView(Context context)
@@ -43,18 +49,37 @@ public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
     protected void initUI()
     {
         mFlStatus = findViewById(R.id.fl_rcv_loadmore_status);
-        mPgbLoading = (ProgressBar) findViewById(R.id.pgb_rcv_loadmore_loading);
-        mImgStatus = (ImageView) findViewById(R.id.img_rcv_loadmore_status);
-        mTvStatus = (TextView) findViewById(R.id.tv_rcv_loadmore_status);
+        mLoadingView = findViewById(R.id.loadingView);
+        mImgStatus = findViewById(R.id.img_rcv_loadmore_status);
+        mTvStatus = findViewById(R.id.tv_rcv_loadmore_status);
     }
 
     protected void refreshUI()
     {
-        setBackgroundColor(mOptions != null ? mOptions.getBgColor() : Color.WHITE);
-        mPgbLoading.setIndeterminateDrawable(getContext().getResources()
-                .getDrawable(mOptions != null ?
-                        mOptions.getProgressDrawableResId() : R.drawable.rcvadapter_progressbar_circle));
-        mTvStatus.setTextColor(mOptions != null ? mOptions.getTextColor() : Color.BLACK);
+        if (mOptions != null && mOptions.getBgColor() != -1)
+        {
+            setBackgroundColor(mOptions.getBgColor());
+        }
+        if (mOptions != null && mOptions.getIconAndLoadingSizeResId() != -1)
+        {
+            int size = getContext().getResources().getDimensionPixelOffset(mOptions.getIconAndLoadingSizeResId());
+            ViewGroup.LayoutParams layoutParams = mImgStatus.getLayoutParams();
+            layoutParams.width = size;
+            layoutParams.height = size;
+            mImgStatus.setLayoutParams(layoutParams);
+            mLoadingView.setSize(size);
+        }
+        if (mOptions != null && mOptions.getTextColor() != -1)
+        {
+            mTvStatus.setTextColor(mOptions.getTextColor());
+            mLoadingView.setColor(mOptions.getTextColor());
+        }
+        if (mOptions != null && mOptions.getTextSizeResId() != -1)
+        {
+            mTvStatus.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                    getContext().getResources().getDimensionPixelSize(mOptions.getTextSizeResId()));
+        }
+
         setBeforeLoadingUI();
     }
 
@@ -70,7 +95,7 @@ public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
     public void setLoadingUI()
     {
         mFlStatus.setVisibility(VISIBLE);
-        mPgbLoading.setVisibility(VISIBLE);
+        mLoadingView.setVisibility(VISIBLE);
         mImgStatus.setVisibility(GONE);
         mTvStatus.setText(mOptions != null ?
                 mOptions.getLoadingMessageResId() : R.string.rcv_loadmore_loading);
@@ -80,7 +105,7 @@ public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
     public void setLoadSuccessUI()
     {
         mFlStatus.setVisibility(VISIBLE);
-        mPgbLoading.setVisibility(GONE);
+        mLoadingView.setVisibility(GONE);
         mImgStatus.setVisibility(VISIBLE);
         mImgStatus.setImageResource(mOptions != null ?
                 mOptions.getSuccessDrawableResId() : R.drawable.loadmore_success);
@@ -92,7 +117,7 @@ public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
     public void setLoadFailUI()
     {
         mFlStatus.setVisibility(VISIBLE);
-        mPgbLoading.setVisibility(GONE);
+        mLoadingView.setVisibility(GONE);
         mImgStatus.setVisibility(VISIBLE);
         mImgStatus.setImageResource(mOptions != null ?
                 mOptions.getFailDrawableResId() : R.drawable.loadmore_fail);
@@ -111,9 +136,9 @@ public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
     public static final class Options
     {
         //背景色
-        private int bgColor = Color.WHITE;
+        private int bgColor = -1;
         //文字颜色
-        private int textColor = Color.BLACK;
+        private int textColor = -1;
         //ProgressBar的圆圈
         private int progressDrawableResId = R.drawable.rcvadapter_progressbar_circle;
         //成功加载的图片
@@ -130,6 +155,10 @@ public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
         private int successMessageResId = R.string.rcv_loadmore_success;
         //没有更多数据的文字
         private int noMoreDataMessageResId = R.string.rcv_loadmore_nomoredata;
+        //icon和Loading大小
+        private int iconAndLoadingSizeResId = -1;
+        //文字大小
+        private int textSizeResId = -1;
 
         public int getBgColor()
         {
@@ -230,6 +259,26 @@ public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
         {
             this.noMoreDataMessageResId = noMoreDataMessageResId;
         }
+
+        public int getIconAndLoadingSizeResId()
+        {
+            return iconAndLoadingSizeResId;
+        }
+
+        public void setIconAndLoadingSizeResId(int iconAndLoadingSizeResId)
+        {
+            this.iconAndLoadingSizeResId = iconAndLoadingSizeResId;
+        }
+
+        public int getTextSizeResId()
+        {
+            return textSizeResId;
+        }
+
+        public void setTextSizeResId(int textSizeResId)
+        {
+            this.textSizeResId = textSizeResId;
+        }
     }
 
     public static final class Builder
@@ -254,51 +303,63 @@ public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
             return this;
         }
 
-        public Builder setProgressDrawableResId(int resId)
+        public Builder setProgressDrawableResId(@DrawableRes int resId)
         {
             options.setProgressDrawableResId(resId);
             return this;
         }
 
-        public Builder setSuccessDrawableResId(int resId)
+        public Builder setSuccessDrawableResId(@DrawableRes int resId)
         {
             options.setSuccessDrawableResId(resId);
             return this;
         }
 
-        public Builder setFailDrawableResId(int resId)
+        public Builder setFailDrawableResId(@DrawableRes int resId)
         {
             options.setFailDrawableResId(resId);
             return this;
         }
 
-        public Builder setInitMessageResId(int resId)
+        public Builder setInitMessageResId(@StringRes int resId)
         {
             options.setInitMessageResId(resId);
             return this;
         }
 
-        public Builder setLoadingMessageResId(int resId)
+        public Builder setLoadingMessageResId(@StringRes int resId)
         {
             options.setLoadingMessageResId(resId);
             return this;
         }
 
-        public Builder setFailMessageResId(int resId)
+        public Builder setFailMessageResId(@StringRes int resId)
         {
             options.setFailMessageResId(resId);
             return this;
         }
 
-        public Builder setSuccessMessageResId(int resId)
+        public Builder setSuccessMessageResId(@StringRes int resId)
         {
             options.setSuccessMessageResId(resId);
             return this;
         }
 
-        public Builder setNoMoreDataMessageResId(int resId)
+        public Builder setNoMoreDataMessageResId(@StringRes int resId)
         {
             options.setNoMoreDataMessageResId(resId);
+            return this;
+        }
+
+        public Builder setIconAndLoadingSizeResId(@DimenRes int resId)
+        {
+            options.setIconAndLoadingSizeResId(resId);
+            return this;
+        }
+
+        public Builder setTextSizeResId(@DimenRes int resId)
+        {
+            options.setTextSizeResId(resId);
             return this;
         }
 
