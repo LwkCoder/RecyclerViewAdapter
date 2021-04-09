@@ -140,6 +140,7 @@ public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
         //文字颜色
         private int textColor = -1;
         //ProgressBar的圆圈
+        //1.4.5已废弃
         private int progressDrawableResId = R.drawable.rcvadapter_progressbar_circle;
         //成功加载的图片
         private int successDrawableResId = R.drawable.loadmore_success;
@@ -180,11 +181,13 @@ public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
             this.textColor = textColor;
         }
 
+        @Deprecated
         public int getProgressDrawableResId()
         {
             return progressDrawableResId;
         }
 
+        @Deprecated
         public void setProgressDrawableResId(int progressDrawableResId)
         {
             this.progressDrawableResId = progressDrawableResId;
@@ -283,7 +286,6 @@ public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
 
     public static final class Builder
     {
-        private RcvDefLoadMoreView loadMoreView;
         private Options options;
 
         public Builder()
@@ -303,6 +305,7 @@ public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
             return this;
         }
 
+        @Deprecated
         public Builder setProgressDrawableResId(@DrawableRes int resId)
         {
             options.setProgressDrawableResId(resId);
