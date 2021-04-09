@@ -15,6 +15,7 @@ import com.lwkandroid.rcvadapter.holder.RcvHolder;
 import com.lwkandroid.rcvadapter.listener.RcvItemViewClickListener;
 import com.lwkandroid.rcvadapter.listener.RcvItemViewLongClickListener;
 import com.lwkandroid.rcvadapter.listener.RcvLoadMoreListener;
+import com.lwkandroid.rcvadapter.ui.RcvDefLoadMoreView;
 import com.lwkandroid.rcvadapter.utils.RcvGridDecoration;
 import com.lwkandroid.rcvadapter.utils.RcvLinearDecoration;
 
@@ -97,6 +98,12 @@ public class DetailActivity extends AppCompatActivity implements RcvMultiAdapter
         }
         if (loadMore)
         {
+            RcvDefLoadMoreView loadMoreView = new RcvDefLoadMoreView.Builder()
+                    .setTextColor(Color.BLUE)
+                    .setTextSizeResId(R.dimen.text_size_test)
+                    .setIconAndLoadingSizeResId(R.dimen.icon_size_test)
+                    .build(this);
+            mAdapter.setLoadMoreLayout(loadMoreView);
             mAdapter.enableLoadMore(true);
             mAdapter.setOnLoadMoreListener(new RcvLoadMoreListener()
             {
