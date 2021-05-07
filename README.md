@@ -5,13 +5,19 @@ CSDN：http://blog.csdn.net/lwk520136/article/details/70787798<br />
 简书：http://www.jianshu.com/p/c86a39f4e811
 
 ### 引用方式
-【最新版本号以[这里](https://github.com/Vanish136/RecyclerViewAdapter/releases)为准】
+【最新版本号以[这里](https://github.com/Vanish136/RecyclerViewAdapter/releases)为准】 <br />
+
+**由于JCenter关闭服务，从1.4.5版本开始改为发布到MavenCentral，引用方式有更新！！！** <br />
+**由于JCenter关闭服务，从1.4.5版本开始改为发布到MavenCentral，引用方式有更新！！！** <br />
+**由于JCenter关闭服务，从1.4.5版本开始改为发布到MavenCentral，引用方式有更新！！！** <br />
 
 ```
 #last-version请查看上面的最新版本号
 
 #只支持AndroidX
-implementation "com.lwkandroid:recyclerviewadapter:last-version"
+
+#从1.4.5版本开始GroupId、ArtifactId均有更新，请按如下方式引用
+implementation "com.lwkandroid.library:rcvadapter:last-version"
 
 ```
 

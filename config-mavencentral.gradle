@@ -1,0 +1,19 @@
+ext {
+
+    configs = [
+            libVersion    : "1.4.5", // 指定库的版本号
+            libGroupId    : "com.lwkandroid.library", // 库的group名，确定好之后不能修改
+            libArtifactId : "rcvadapter",//库的ArtifactId
+            libName       : 'RecyclerViewAdapter',// 库的名称
+            libDescription: 'Library for android', // 项目描述，随意
+
+            githubPageUrl : 'https://github.com/Vanish136/RecyclerViewAdapter', // 项目开源地址
+            gitMasterUrl  : "https://github.com/Vanish136/RecyclerViewAdapter/tree/master",//分支地址
+            gitHttpUrl    : 'scm:git:github.com/Vanish136/RecyclerViewAdapter.git', // 项目git地址
+            gitSshUrl     : 'scm:git:ssh://git@github.com:Vanish136/RecyclerViewAdapter.git', // 项目git地址
+
+            developerId   : 'luo', // 开发者id
+            developerName : 'wenkang', // 开发者姓名
+            developerEmail: '505515031@qq.com', // 开发者邮箱
+    ]
+}
