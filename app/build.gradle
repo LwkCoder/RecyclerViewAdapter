@@ -22,8 +22,9 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-//    implementation "com.android.support:recyclerview-v7:${LIB_ANDROID_SUPPORT_VERSION}"
+    implementation "androidx.appcompat:appcompat:$AppcompatVersion"
+    implementation "androidx.recyclerview:recyclerview:$RecyclerViewVersion"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$SwipeRefreshLayoutVersion"
+    implementation "com.lwkandroid.widget:ComActionBar:$ComactionBarVersion"
     implementation project(':recyclerviewadapter')
-    implementation 'com.lwkandroid.widget:ComActionBar:1.1.6'
 }

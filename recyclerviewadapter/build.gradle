@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply from: "${rootProject.projectDir}/publish-mavencentral.gradle"
 
 android {
     compileSdkVersion COMPILE_SDK_VERSION as int
@@ -12,7 +13,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api "androidx.recyclerview:recyclerview:${LIB_ANDROIX_RECYCLERVIEW_VERSION}"
+    implementation "androidx.recyclerview:recyclerview:$RecyclerViewVersion"
 }
 
 allprojects {
@@ -25,4 +26,3 @@ allprojects {
     }
 }
 
-apply from: "upload.gradle"
