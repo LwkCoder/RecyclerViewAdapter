@@ -1,9 +1,14 @@
 package com.lwkandroid.rcvadapter.utils;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.Log;
 
 import com.lwkandroid.rcvadapter.BuildConfig;
+
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
 
 /**
  * Created by LWK
@@ -34,4 +39,25 @@ public class RcvUtils
         return (int) (dpValue * scale + 0.5f);
     }
 
+    public static Drawable getDrawableResources(Context context, @DrawableRes int id)
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            return context.getResources().getDrawable(id, context.getTheme());
+        } else
+        {
+            return context.getResources().getDrawable(id);
+        }
+    }
+
+    public static int getColorResources(Context context, @ColorRes int id)
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            return context.getColor(id);
+        } else
+        {
+            return context.getResources().getColor(id);
+        }
+    }
 }

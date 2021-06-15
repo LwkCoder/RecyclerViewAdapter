@@ -216,7 +216,7 @@ public abstract class RcvMultiAdapter<T> extends RecyclerView.Adapter<RcvHolder>
     {
         if (mLoadMoreLayout == null)
         {
-            mLoadMoreLayout = new RcvDefLoadMoreView.Builder().build(getContext());
+            mLoadMoreLayout = new RcvDefLoadMoreView.Builder(getContext()).build();
         }
         return mLoadMoreLayout;
     }

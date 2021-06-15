@@ -1,6 +1,9 @@
 package com.lwkandroid.rcvadapter.ui;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +12,10 @@ import android.widget.TextView;
 
 import com.lwkandroid.rcvadapter.R;
 import com.lwkandroid.rcvadapter.base.RcvBaseLoadMoreView;
+import com.lwkandroid.rcvadapter.utils.RcvUtils;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
@@ -56,29 +62,24 @@ public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
 
     protected void refreshUI()
     {
-        if (mOptions != null && mOptions.getBgColor() != -1)
+        if (mOptions == null)
         {
-            setBackgroundColor(mOptions.getBgColor());
+            return;
         }
-        if (mOptions != null && mOptions.getIconAndLoadingSizeResId() != -1)
-        {
-            int size = getContext().getResources().getDimensionPixelOffset(mOptions.getIconAndLoadingSizeResId());
-            ViewGroup.LayoutParams layoutParams = mImgStatus.getLayoutParams();
-            layoutParams.width = size;
-            layoutParams.height = size;
-            mImgStatus.setLayoutParams(layoutParams);
-            mLoadingView.setSize(size);
-        }
-        if (mOptions != null && mOptions.getTextColor() != -1)
-        {
-            mTvStatus.setTextColor(mOptions.getTextColor());
-            mLoadingView.setColor(mOptions.getTextColor());
-        }
-        if (mOptions != null && mOptions.getTextSizeResId() != -1)
-        {
-            mTvStatus.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                    getContext().getResources().getDimensionPixelSize(mOptions.getTextSizeResId()));
-        }
+
+        setBackgroundColor(mOptions.getBgColor());
+
+        int size = mOptions.getIconAndLoadingSize();
+        ViewGroup.LayoutParams layoutParams = mImgStatus.getLayoutParams();
+        layoutParams.width = size;
+        layoutParams.height = size;
+        mImgStatus.setLayoutParams(layoutParams);
+
+        mLoadingView.setSize(size);
+        mLoadingView.setColor(mOptions.getTextColor());
+
+        mTvStatus.setTextColor(mOptions.getTextColor());
+        mTvStatus.setTextSize(TypedValue.COMPLEX_UNIT_PX, mOptions.getTextSize());
 
         setBeforeLoadingUI();
     }
@@ -87,8 +88,10 @@ public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
     public void setBeforeLoadingUI()
     {
         mFlStatus.setVisibility(GONE);
-        mTvStatus.setText(mOptions != null ?
-                mOptions.getInitMessageResId() : R.string.rcv_loadmore_init);
+        if (mOptions != null)
+        {
+            mTvStatus.setText(mOptions.getInitMessage());
+        }
     }
 
     @Override
@@ -97,8 +100,10 @@ public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
         mFlStatus.setVisibility(VISIBLE);
         mLoadingView.setVisibility(VISIBLE);
         mImgStatus.setVisibility(GONE);
-        mTvStatus.setText(mOptions != null ?
-                mOptions.getLoadingMessageResId() : R.string.rcv_loadmore_loading);
+        if (mOptions != null)
+        {
+            mTvStatus.setText(mOptions.getLoadingMessage());
+        }
     }
 
     @Override
@@ -107,10 +112,16 @@ public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
         mFlStatus.setVisibility(VISIBLE);
         mLoadingView.setVisibility(GONE);
         mImgStatus.setVisibility(VISIBLE);
-        mImgStatus.setImageResource(mOptions != null ?
-                mOptions.getSuccessDrawableResId() : R.drawable.loadmore_success);
-        mTvStatus.setText(mOptions != null ?
-                mOptions.getSuccessMessageResId() : R.string.rcv_loadmore_success);
+        if (mOptions != null)
+        {
+            Drawable drawable = mOptions.getSuccessDrawable();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && drawable != null)
+            {
+                drawable.setTint(mOptions.getTextColor());
+            }
+            mImgStatus.setImageDrawable(drawable);
+            mTvStatus.setText(mOptions.getSuccessMessage());
+        }
     }
 
     @Override
@@ -119,47 +130,41 @@ public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
         mFlStatus.setVisibility(VISIBLE);
         mLoadingView.setVisibility(GONE);
         mImgStatus.setVisibility(VISIBLE);
-        mImgStatus.setImageResource(mOptions != null ?
-                mOptions.getFailDrawableResId() : R.drawable.loadmore_fail);
-        mTvStatus.setText(mOptions != null ?
-                mOptions.getFailMessageResId() : R.string.rcv_loadmore_fail);
+        if (mOptions != null)
+        {
+            Drawable drawable = mOptions.getFailDrawable();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && drawable != null)
+            {
+                drawable.setTint(mOptions.getTextColor());
+            }
+            mImgStatus.setImageDrawable(drawable);
+            mTvStatus.setText(mOptions.getFailMessage());
+        }
     }
 
     @Override
     public void setNoMoreDataUI()
     {
         mFlStatus.setVisibility(GONE);
-        mTvStatus.setText(mOptions != null ?
-                mOptions.getNoMoreDataMessageResId() : R.string.rcv_loadmore_nomoredata);
+        if (mOptions != null)
+        {
+            mTvStatus.setText(mOptions.getNoMoreDataMessage());
+        }
     }
 
     public static final class Options
     {
-        //背景色
         private int bgColor = -1;
-        //文字颜色
         private int textColor = -1;
-        //ProgressBar的圆圈
-        //1.4.5已废弃
-        private int progressDrawableResId = R.drawable.rcvadapter_progressbar_circle;
-        //成功加载的图片
-        private int successDrawableResId = R.drawable.loadmore_success;
-        //失败加载的图片
-        private int failDrawableResId = R.drawable.loadmore_fail;
-        //未触发状态的文字
-        private int initMessageResId = R.string.rcv_loadmore_init;
-        //加载中的文字
-        private int loadingMessageResId = R.string.rcv_loadmore_loading;
-        //加载失败的文字
-        private int failMessageResId = R.string.rcv_loadmore_fail;
-        //加载成功的文字
-        private int successMessageResId = R.string.rcv_loadmore_success;
-        //没有更多数据的文字
-        private int noMoreDataMessageResId = R.string.rcv_loadmore_nomoredata;
-        //icon和Loading大小
-        private int iconAndLoadingSizeResId = -1;
-        //文字大小
-        private int textSizeResId = -1;
+        private Drawable successDrawable;
+        private Drawable failDrawable;
+        private String initMessage;
+        private String loadingMessage;
+        private String failMessage;
+        private String successMessage;
+        private String noMoreDataMessage;
+        private int iconAndLoadingSize;
+        private int textSize;
 
         public int getBgColor()
         {
@@ -181,192 +186,242 @@ public class RcvDefLoadMoreView extends RcvBaseLoadMoreView
             this.textColor = textColor;
         }
 
-        @Deprecated
-        public int getProgressDrawableResId()
+        public Drawable getSuccessDrawable()
         {
-            return progressDrawableResId;
+            return successDrawable;
         }
 
-        @Deprecated
-        public void setProgressDrawableResId(int progressDrawableResId)
+        public void setSuccessDrawable(Drawable successDrawable)
         {
-            this.progressDrawableResId = progressDrawableResId;
+            this.successDrawable = successDrawable;
         }
 
-        public int getSuccessDrawableResId()
+        public Drawable getFailDrawable()
         {
-            return successDrawableResId;
+            return failDrawable;
         }
 
-        public void setSuccessDrawableResId(int successDrawableResId)
+        public void setFailDrawable(Drawable failDrawable)
         {
-            this.successDrawableResId = successDrawableResId;
+            this.failDrawable = failDrawable;
         }
 
-        public int getFailDrawableResId()
+        public String getInitMessage()
         {
-            return failDrawableResId;
+            return initMessage;
         }
 
-        public void setFailDrawableResId(int failDrawableResId)
+        public void setInitMessage(String initMessage)
         {
-            this.failDrawableResId = failDrawableResId;
+            this.initMessage = initMessage;
         }
 
-        public int getInitMessageResId()
+        public String getLoadingMessage()
         {
-            return initMessageResId;
+            return loadingMessage;
         }
 
-        public void setInitMessageResId(int initMessageResId)
+        public void setLoadingMessage(String loadingMessage)
         {
-            this.initMessageResId = initMessageResId;
+            this.loadingMessage = loadingMessage;
         }
 
-        public int getLoadingMessageResId()
+        public String getFailMessage()
         {
-            return loadingMessageResId;
+            return failMessage;
         }
 
-        public void setLoadingMessageResId(int loadingMessageResId)
+        public void setFailMessage(String failMessage)
         {
-            this.loadingMessageResId = loadingMessageResId;
+            this.failMessage = failMessage;
         }
 
-        public int getFailMessageResId()
+        public String getSuccessMessage()
         {
-            return failMessageResId;
+            return successMessage;
         }
 
-        public void setFailMessageResId(int failMessageResId)
+        public void setSuccessMessage(String successMessage)
         {
-            this.failMessageResId = failMessageResId;
+            this.successMessage = successMessage;
         }
 
-        public int getSuccessMessageResId()
+        public String getNoMoreDataMessage()
         {
-            return successMessageResId;
+            return noMoreDataMessage;
         }
 
-        public void setSuccessMessageResId(int successMessageResId)
+        public void setNoMoreDataMessage(String noMoreDataMessage)
         {
-            this.successMessageResId = successMessageResId;
+            this.noMoreDataMessage = noMoreDataMessage;
         }
 
-        public int getNoMoreDataMessageResId()
+        public int getIconAndLoadingSize()
         {
-            return noMoreDataMessageResId;
+            return iconAndLoadingSize;
         }
 
-        public void setNoMoreDataMessageResId(int noMoreDataMessageResId)
+        public void setIconAndLoadingSize(int iconAndLoadingSize)
         {
-            this.noMoreDataMessageResId = noMoreDataMessageResId;
+            this.iconAndLoadingSize = iconAndLoadingSize;
         }
 
-        public int getIconAndLoadingSizeResId()
+        public int getTextSize()
         {
-            return iconAndLoadingSizeResId;
+            return textSize;
         }
 
-        public void setIconAndLoadingSizeResId(int iconAndLoadingSizeResId)
+        public void setTextSize(int textSize)
         {
-            this.iconAndLoadingSizeResId = iconAndLoadingSizeResId;
-        }
-
-        public int getTextSizeResId()
-        {
-            return textSizeResId;
-        }
-
-        public void setTextSizeResId(int textSizeResId)
-        {
-            this.textSizeResId = textSizeResId;
+            this.textSize = textSize;
         }
     }
 
     public static final class Builder
     {
+        private Context context;
         private Options options;
 
-        public Builder()
+        public Builder(Context context)
         {
-            options = new Options();
+            this.options = new Options();
+            this.context = context;
+            options.setBgColor(Color.TRANSPARENT);
+            options.setFailDrawable(RcvUtils.getDrawableResources(context, R.drawable.loadmore_fail));
+            options.setSuccessDrawable(RcvUtils.getDrawableResources(context, R.drawable.loadmore_success));
+            options.setInitMessage(context.getResources().getString(R.string.rcv_loadmore_init));
+            options.setLoadingMessage(context.getResources().getString(R.string.rcv_loadmore_loading));
+            options.setFailMessage(context.getResources().getString(R.string.rcv_loadmore_fail));
+            options.setSuccessMessage(context.getResources().getString(R.string.rcv_loadmore_success));
+            options.setNoMoreDataMessage(context.getResources().getString(R.string.rcv_loadmore_nomoredata));
+            options.setIconAndLoadingSize(context.getResources().getDimensionPixelOffset(R.dimen.rcvadapter_icon_size_loadmore));
+            options.setTextSize(context.getResources().getDimensionPixelOffset(R.dimen.rcvadapter_text_size_loadmore));
         }
 
-        public Builder setBgColor(int bgColor)
+        public Builder setBgColorResId(@ColorRes int resId)
         {
-            options.setBgColor(bgColor);
+            return setBgColor(RcvUtils.getColorResources(context, resId));
+        }
+
+        public Builder setBgColor(@ColorInt int color)
+        {
+            options.setBgColor(color);
             return this;
         }
 
-        public Builder setTextColor(int textColor)
+        public Builder setTextColorResId(@ColorRes int resId)
+        {
+            return setTextColorResId(RcvUtils.getColorResources(context, resId));
+        }
+
+        public Builder setTextColor(@ColorInt int textColor)
         {
             options.setTextColor(textColor);
             return this;
         }
 
-        @Deprecated
-        public Builder setProgressDrawableResId(@DrawableRes int resId)
-        {
-            options.setProgressDrawableResId(resId);
-            return this;
-        }
-
         public Builder setSuccessDrawableResId(@DrawableRes int resId)
         {
-            options.setSuccessDrawableResId(resId);
+            return setSuccessDrawable(RcvUtils.getDrawableResources(context, resId));
+        }
+
+        public Builder setSuccessDrawable(Drawable drawable)
+        {
+            options.setSuccessDrawable(drawable);
             return this;
         }
 
         public Builder setFailDrawableResId(@DrawableRes int resId)
         {
-            options.setFailDrawableResId(resId);
+            return setFailDrawable(RcvUtils.getDrawableResources(context, resId));
+        }
+
+        public Builder setFailDrawable(Drawable drawable)
+        {
+            options.setFailDrawable(drawable);
             return this;
         }
 
         public Builder setInitMessageResId(@StringRes int resId)
         {
-            options.setInitMessageResId(resId);
+            return setInitMessage(context.getString(resId));
+        }
+
+        public Builder setInitMessage(String message)
+        {
+            options.setInitMessage(message);
             return this;
         }
 
         public Builder setLoadingMessageResId(@StringRes int resId)
         {
-            options.setLoadingMessageResId(resId);
+            return setLoadingMessage(context.getString(resId));
+        }
+
+        public Builder setLoadingMessage(String message)
+        {
+            options.setLoadingMessage(message);
             return this;
         }
 
         public Builder setFailMessageResId(@StringRes int resId)
         {
-            options.setFailMessageResId(resId);
+            return setFailMessage(context.getString(resId));
+        }
+
+        public Builder setFailMessage(String message)
+        {
+            options.setFailMessage(message);
             return this;
         }
 
         public Builder setSuccessMessageResId(@StringRes int resId)
         {
-            options.setSuccessMessageResId(resId);
+            return setSuccessMessage(context.getString(resId));
+        }
+
+        public Builder setSuccessMessage(String message)
+        {
+            options.setSuccessMessage(message);
             return this;
         }
 
         public Builder setNoMoreDataMessageResId(@StringRes int resId)
         {
-            options.setNoMoreDataMessageResId(resId);
+            return setNoMoreDataMessage(context.getString(resId));
+        }
+
+        public Builder setNoMoreDataMessage(String message)
+        {
+            options.setNoMoreDataMessage(message);
             return this;
         }
 
         public Builder setIconAndLoadingSizeResId(@DimenRes int resId)
         {
-            options.setIconAndLoadingSizeResId(resId);
+            return setIconAndLoadingSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimensionPixelOffset(resId));
+        }
+
+        public Builder setIconAndLoadingSize(int unit, int size)
+        {
+            int value = (int) TypedValue.applyDimension(unit, size, context.getResources().getDisplayMetrics());
+            options.setIconAndLoadingSize(value);
             return this;
         }
 
         public Builder setTextSizeResId(@DimenRes int resId)
         {
-            options.setTextSizeResId(resId);
+            return setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimensionPixelOffset(resId));
+        }
+
+        public Builder setTextSize(int unit, int size)
+        {
+            int value = (int) TypedValue.applyDimension(unit, size, context.getResources().getDisplayMetrics());
+            options.setTextSize(value);
             return this;
         }
 
-        public RcvDefLoadMoreView build(Context context)
+        public RcvDefLoadMoreView build()
         {
             return new RcvDefLoadMoreView(context, options);
         }

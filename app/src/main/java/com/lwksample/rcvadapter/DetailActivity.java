@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -98,11 +99,11 @@ public class DetailActivity extends AppCompatActivity implements RcvMultiAdapter
         }
         if (loadMore)
         {
-            RcvDefLoadMoreView loadMoreView = new RcvDefLoadMoreView.Builder()
+            RcvDefLoadMoreView loadMoreView = new RcvDefLoadMoreView.Builder(this)
                     .setTextColor(Color.BLUE)
                     .setTextSizeResId(R.dimen.text_size_test)
                     .setIconAndLoadingSizeResId(R.dimen.icon_size_test)
-                    .build(this);
+                    .build();
             mAdapter.setLoadMoreLayout(loadMoreView);
             mAdapter.enableLoadMore(true);
             mAdapter.setOnLoadMoreListener(new RcvLoadMoreListener()

@@ -48,10 +48,10 @@ public class RefreshActivity extends AppCompatActivity implements
         mRecyclerView.addItemDecoration(RcvLinearDecoration.createDefaultVertical(this));
         mAdapter = new Adapter(this, null);
         mAdapter.setEmptyView(R.layout.layout_emptyview02);
-        RcvDefLoadMoreView loadMoreView = new RcvDefLoadMoreView.Builder()
+        RcvDefLoadMoreView loadMoreView = new RcvDefLoadMoreView.Builder(this)
                 .setBgColor(Color.GREEN)
                 .setTextColor(Color.RED)
-                .build(this);
+                .build();
         mAdapter.setLoadMoreLayout(loadMoreView);
         mRecyclerView.setAdapter(mAdapter);
 

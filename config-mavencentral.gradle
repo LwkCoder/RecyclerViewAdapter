@@ -1,6 +1,6 @@
 ext {
     configs = [
-            libVersion    : "1.4.5", // 指定库的版本号
+            libVersion    : "1.4.6", // 指定库的版本号
             libGroupId    : "com.lwkandroid.library", // 库的group名，确定好之后不能修改
             libArtifactId : "rcvadapter",//库的ArtifactId
             libName       : 'RecyclerViewAdapter',// 库的名称
