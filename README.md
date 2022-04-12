@@ -1,5 +1,9 @@
 # RecyclerViewAdapter
 
+【不再维护，如有bug、需求，请自行clone源码修改】
+
+
+
 想了解该框架的可参考以下博客说明：<br />
 CSDN：http://blog.csdn.net/lwk520136/article/details/70787798<br />
 简书：http://www.jianshu.com/p/c86a39f4e811
