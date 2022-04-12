@@ -30,11 +30,11 @@ implementation "com.lwkandroid.library:rcvadapter:last-version"
  - 支持悬浮标签StickyLayout（1.2.0版本新增）
 
 ### 效果图
-![](https://github.com/Vanish136/RecyclerViewAdapter/raw/master/pictures/pic01.png) <br />
-![](https://github.com/Vanish136/RecyclerViewAdapter/raw/master/pictures/pic02.png) <br />
-![](https://github.com/Vanish136/RecyclerViewAdapter/raw/master/pictures/pic03.png) <br />
-![](https://github.com/Vanish136/RecyclerViewAdapter/raw/master/pictures/pic04.png) <br />
-![](https://github.com/Vanish136/RecyclerViewAdapter/raw/master/pictures/pic05.gif) <br />
+![](https://github.com/LwkCoder/RecyclerViewAdapter/raw/master/pictures/pic01.png) <br/>
+![](https://github.com/LwkCoder/RecyclerViewAdapter/raw/master/pictures/pic02.png) <br/>
+![](https://github.com/LwkCoder/RecyclerViewAdapter/raw/master/pictures/pic03.png) <br/>
+![](https://github.com/LwkCoder/RecyclerViewAdapter/raw/master/pictures/pic04.png) <br/>
+![](https://github.com/LwkCoder/RecyclerViewAdapter/raw/master/pictures/pic05.gif) <br/>
 
 ### 使用方式
 
